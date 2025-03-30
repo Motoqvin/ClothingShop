@@ -1,0 +1,97 @@
+@using ClothingStoreApp.Repositories.Base
+@inject IOrdersRepository ordersRepository
+
+<h2>Create new order</h2>
+
+<h3>Add new product to order</h3>
+<form id="ProductForm" method="post" action="/Product">
+  <div class="mb-3">
+    <label for="name" class="form-label">Name</label>
+    <input type="text" class="form-control" id="name" name="name">
+  </div>
+  <div class="mb-3">
+    <label for="description" class="form-label">Description</label>
+    <input type="text" class="form-control" id="description" name="description">
+  </div>
+  <div class="mb-3">
+    <label for="price" class="form-label">Price</label>
+    <input type="text" class="form-control" id="price" name="price">
+  </div>
+  <button type="submit" class="btn btn-success">Add</button>
+</form>
+
+
+<br>
+<table class="table">
+<thead>
+    <tr>
+    <th scope="col">Name</th>
+    <th scope="col">Description</th>
+    <th scope="col">Price</th>
+    </tr>
+</thead>
+<tbody id="productList">
+</tbody>
+</table>
+
+<button id="createOrderBtn" class="btn btn-primary">Create Order</button>
+
+<script>
+  let productList = []
+  document.getElementById("ProductForm")
+  .addEventListener("submit", (ev) => {
+    ev.preventDefault();
+
+    const name = document.getElementById("name").value;
+    const description = document.getElementById("description").value;
+    const price = document.getElementById("price").value;
+
+    
+    const data = {
+      name: name,
+      description: description,
+      price: price
+    };
+
+    productList.push(data);
+    loadProducts(productList);
+  })
+
+  document.getElementById("createOrderBtn").addEventListener("click", async () => {
+    if (productList.length === 0) {
+      alert("Please add at least one product before creating an order.");
+      return;
+    }
+
+    const orderData = {
+      products: productList
+    }
+
+    const response = await fetch("/Order", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(orderData)
+    })
+
+    if (response.ok) {
+      window.location.href = "/Order";
+      productList = []
+      loadProducts()
+    }
+  });
+
+  async function loadProducts(list) {
+    const productList = document.getElementById("productList");
+    productList.innerHTML = "";
+
+    list.forEach(product => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td>${product.name}</td>
+            <td>${product.description}</td>
+            <td>${product.price}</td>
+        `;
+        productList.appendChild(row);
+    });
+  }
+</script>

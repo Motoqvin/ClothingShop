@@ -1,0 +1,49 @@
+@using ClothingStoreApp.Repositories.Base
+@inject IOrdersRepository ordersRepository
+
+@{
+    var orders = ordersRepository.GetAll();
+}
+
+<button class="btn btn-success" style="margin-left: 550px;" onclick="window.location.href='Order/Create'">Create new Order</button>
+<h2>Your orders</h2>
+@if(!orders.Any()){
+    <br>
+    <h2>Nothing here</h2>
+}
+else{
+    <br>
+    <table class="table">
+    <thead>
+        <tr>
+        <th scope="col">Id</th>
+        <th scope="col">Date</th>
+        <th scope="col">TotalPrice</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var order in orders){
+            <tr>
+                <th scope="row"><a href="Order/@order.Id">@order.Id</a></th>
+                <td>@order.Date</td>
+                <td>@order.TotalPrice</td>
+                <td><button class="btn btn-danger" onclick="DeleteOrder(@order.Id)">Delete</button></td>
+            </tr>
+        }
+    </tbody>
+    </table>
+}
+
+<script>
+    function DeleteOrder(orderId){
+        fetch(`/Order/${orderId}`, {
+            method: 'DELETE'
+        })
+        .then(response => {
+            if(response.ok){
+                console.log("Order deleted");
+                window.location.href = '/Order';
+            }
+        })
+    }
+</script>
