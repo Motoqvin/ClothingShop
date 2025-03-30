@@ -30,12 +30,10 @@ public class OrdersDapperRepository : IOrdersRepository
 
                 if (productId == 0)
                 {
-                    string insertProductSql = @"
+                    productId = conn.ExecuteScalar<int>(@"
                         insert into Products (Name, Description, Price)
                         output inserted.Id
-                        values (@Name, @Description, @Price);";
-
-                    productId = conn.ExecuteScalar<int>(insertProductSql, new 
+                        values (@Name, @Description, @Price)", new 
                     { 
                         product.Name, 
                         product.Description, 

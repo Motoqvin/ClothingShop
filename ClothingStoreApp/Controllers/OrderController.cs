@@ -2,16 +2,22 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using ClothingStoreApp.Dtos;
 using ClothingStoreApp.Models;
 using ClothingStoreApp.Repositories.Base;
+using ClothingStoreApp.Responses;
 using ClothingStoreApp.Services.Base;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace ClothingStoreApp.Controllers;
 
+[ProducesResponseType((int)HttpStatusCode.InternalServerError, Type = typeof(InternalServerErrorResponse))]
+[ProducesResponseType((int)HttpStatusCode.BadRequest, Type = typeof(BadRequestResponse))]
+[ProducesResponseType((int)HttpStatusCode.NotFound, Type = typeof(NotFoundResponse))]
+[ProducesResponseType((int)HttpStatusCode.OK)]
 [Route("[controller]")]
 public class OrderController : Controller
 {

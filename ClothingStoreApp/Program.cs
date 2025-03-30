@@ -1,3 +1,4 @@
+using ClothingStoreApp.Middlewares;
 using ClothingStoreApp.Repositories;
 using ClothingStoreApp.Repositories.Base;
 using ClothingStoreApp.Services;
@@ -10,10 +11,18 @@ builder.Services.AddTransient<IProductsRepository>((serviceProvider) => {
     var connStr = builder.Configuration.GetConnectionString("SqlDB") ?? "";
     return new ProductsDapperRepository(connStr);
 });
+
 builder.Services.AddTransient<IOrdersRepository>((serviceProvider) => {
     var connStr = builder.Configuration.GetConnectionString("SqlDB") ?? "";
     return new OrdersDapperRepository(connStr);
 });
+
+builder.Services.AddTransient<IHttpLogRepository>((serviceProvider) => {
+    var connStr = builder.Configuration.GetConnectionString("SqlDB") ?? "";
+    return new HttpLogSqlRepository(connStr);
+});
+
+builder.Services.AddScoped<IHttpLogger, HttpLogger>();
 
 
 builder.Services.AddTransient<IProductService>((serviceProvider) => {
@@ -35,6 +44,8 @@ app.UseAuthorization();
 app.MapStaticAssets();
 
 app.MapControllers();
+app.UseMiddleware<LoggingMiddleware>();
+app.UseMiddleware<ExceptionHandlerMiddleware>();
 
 app.MapControllerRoute(
     name: "default",

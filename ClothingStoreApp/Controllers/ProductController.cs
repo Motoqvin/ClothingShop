@@ -3,10 +3,15 @@ using Microsoft.AspNetCore.Mvc;
 using ClothingStoreApp.Models;
 using ClothingStoreApp.Services.Base;
 using ClothingStoreApp.Dtos;
+using ClothingStoreApp.Responses;
 
 namespace ClothingStoreApp.Controllers;
 
 [Route("[controller]")]
+[ProducesResponseType((int)HttpStatusCode.InternalServerError, Type = typeof(InternalServerErrorResponse))]
+[ProducesResponseType((int)HttpStatusCode.BadRequest, Type = typeof(BadRequestResponse))]
+[ProducesResponseType((int)HttpStatusCode.NotFound, Type = typeof(NotFoundResponse))]
+[ProducesResponseType((int)HttpStatusCode.OK)]
 public class ProductController : Controller
 {
     private readonly IProductService productsService;
