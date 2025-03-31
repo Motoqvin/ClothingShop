@@ -1,0 +1,139 @@
+@model Order?
+
+@if(Model != null){
+    <h2>Your order Id: @Model.Id</h2>
+    <h2>Your order Date: @Model.Date</h2>
+
+    <h2>Add new product</h2>
+    <form id="ProductForm" method="post" action="/Product">
+    <div class="mb-3">
+        <label for="name" class="form-label">Name</label>
+        <input type="text" class="form-control" id="name" name="name">
+    </div>
+    <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <input type="text" class="form-control" id="description" name="description">
+    </div>
+    <div class="mb-3">
+        <label for="price" class="form-label">Price</label>
+        <input type="text" class="form-control" id="price" name="price">
+    </div>
+    <button type="submit" class="btn btn-success">Add</button>
+    </form>
+    
+    <br>
+    <table class="table">
+    <thead>
+        <tr>
+        <th scope="col">Id</th>
+        <th scope="col">Name</th>
+        <th scope="col">Description</th>
+        <th scope="col">Price</th>
+        </tr>
+    </thead>
+    <tbody id="productList">
+    </tbody>
+    </table>
+
+    <button id="updateOrderBtn" class="btn btn-primary">Update Order</button>
+}
+else{
+    <h1 class="danger">Order not found!</h1>
+}
+
+
+<script>
+  let addProducts = []
+  let orderId = @Model?.Id
+  document.addEventListener("DOMContentLoaded", function() {
+    loadProducts(orderId)
+})
+  document.getElementById("ProductForm").addEventListener("submit", async (ev) => {
+    ev.preventDefault()
+
+    const name = document.getElementById("name").value
+    const description = document.getElementById("description").value
+    const price = document.getElementById("price").value
+
+    const data = {
+        name: name,
+        description: description,
+        price: price
+    }
+
+    document.getElementById("name").value = ""
+    document.getElementById("description").value = ""
+    document.getElementById("price").value = ""
+
+    addProducts.push(data)
+    loadProducts(orderId)
+})
+
+document.getElementById("updateOrderBtn").addEventListener("click", async () => {
+    const orderData = {
+      products: addProducts
+    }
+
+    const response = await fetch(`/Order/${orderId}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(orderData)
+    })
+
+    if (response.ok) {
+      window.location.href = "/Order";
+      loadProducts(orderId)
+    }
+  });
+
+  async function loadProducts(id) {
+    const response = await fetch(`/Order/${id}/products`);
+
+    if(response.ok){
+      console.log("Ok loading products");
+    }
+    else{
+      alert("Error loading products");
+    }
+    const products = await response.json();
+    const productList = document.getElementById("productList");
+    productList.innerHTML = "";
+
+    products.forEach(product => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td><a href='/Product/${product.id}'>${product.id}</a></td>
+            <td>${product.name}</td>
+            <td>${product.description}</td>
+            <td>${product.price}</td>
+            <td>
+                <button class="btn btn-danger" onclick="DeleteProduct(${product.id})">Delete</button>
+            </td>
+        `;
+        productList.appendChild(row);
+    })
+    addProducts.forEach(product => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td>0</td>
+            <td>${product.name}</td>
+            <td>${product.description}</td>
+            <td>${product.price}</td>
+        `;
+        productList.appendChild(row);
+    })
+  }
+
+  function DeleteProduct(prodId){
+        fetch(`/Product/${prodId}`, {
+            method: 'DELETE'
+        })
+        .then(response => {
+            if(response.ok){
+                console.log("Product deleted");
+                loadProducts(orderId);
+            }
+        })
+  }
+
+</script>
