@@ -1,0 +1,51 @@
+@inject IProductsRepository productsRepository
+
+@{
+    var products = productsRepository.GetAll();
+}
+
+<h1>Add new product</h1>
+
+<form method="post" action="/Product">
+  <div class="mb-3">
+    <label for="name" class="form-label">Name</label>
+    <input type="text" class="form-control" id="name" name="name">
+  </div>
+  <div class="mb-3">
+    <label for="description" class="form-label">Description</label>
+    <input type="text" class="form-control" id="description" name="description">
+  </div>
+  <div class="mb-3">
+    <label for="price" class="form-label">Price</label>
+    <input type="text" class="form-control" id="price" name="price">
+  </div>
+  <button type="submit" class="btn btn-success">Add</button>
+</form>
+
+@if(!products.Any()){
+    <br>
+    <h2>Nothing here</h2>
+}
+else{
+    <br>
+    <table class="table">
+    <thead>
+        <tr>
+        <th scope="col">Id</th>
+        <th scope="col">Name</th>
+        <th scope="col">Description<th>
+        <th scope="col">Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var product in products){
+            <tr>
+                <th scope="row">@product.Id</th>
+                <td>@product.Name</td>
+                <td>@product.Description</td>
+                <td>@product.Price</td>
+            </tr>
+        }
+    </tbody>
+    </table>
+}
