@@ -1,24 +1,34 @@
+﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.5.2.0
+VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClothingStoreApp", "ClothingStoreApp.csproj", "{EADE7E5B-9BF6-1170-12D9-F7EBFB2908B6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClothingStoreApp.Core", "ClothingStoreApp.Core\ClothingStoreApp.Core.csproj", "{65822CE8-13EB-4CBC-97B1-192F8B94BABA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClothingStoreApp.Infrastructure", "ClothingStoreApp.Infrastructure\ClothingStoreApp.Infrastructure.csproj", "{1E1DF8B9-1523-4A5B-99C4-B85F2E87E14D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClothingStoreApp.Presentation", "ClothingStoreApp.Presentation\ClothingStoreApp.Presentation.csproj", "{850371B5-E90D-41D5-BD8D-2D5D97BB695A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
-	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{EADE7E5B-9BF6-1170-12D9-F7EBFB2908B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EADE7E5B-9BF6-1170-12D9-F7EBFB2908B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EADE7E5B-9BF6-1170-12D9-F7EBFB2908B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EADE7E5B-9BF6-1170-12D9-F7EBFB2908B6}.Release|Any CPU.Build.0 = Release|Any CPU
-	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {AC704298-4925-44E3-B953-E4F5AC8C6FCE}
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{65822CE8-13EB-4CBC-97B1-192F8B94BABA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{65822CE8-13EB-4CBC-97B1-192F8B94BABA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{65822CE8-13EB-4CBC-97B1-192F8B94BABA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{65822CE8-13EB-4CBC-97B1-192F8B94BABA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E1DF8B9-1523-4A5B-99C4-B85F2E87E14D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E1DF8B9-1523-4A5B-99C4-B85F2E87E14D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E1DF8B9-1523-4A5B-99C4-B85F2E87E14D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E1DF8B9-1523-4A5B-99C4-B85F2E87E14D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{850371B5-E90D-41D5-BD8D-2D5D97BB695A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{850371B5-E90D-41D5-BD8D-2D5D97BB695A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{850371B5-E90D-41D5-BD8D-2D5D97BB695A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{850371B5-E90D-41D5-BD8D-2D5D97BB695A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

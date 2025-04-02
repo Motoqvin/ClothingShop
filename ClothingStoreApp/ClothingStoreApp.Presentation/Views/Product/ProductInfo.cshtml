@@ -1,0 +1,62 @@
+@model Product?
+
+@if (Model != null)
+{
+    <form id="ProductForm" class="row g-3">
+        <div class="mb-1">
+            <label for="name" class="form-label">Name</label>
+            <input type="text" class="form-control" id="name" name="name" value="@Model.Name">
+        </div>
+        <div class="mb-1">
+            <label for="description" class="form-label">Description</label>
+            <input type="text" class="form-control" id="description" name="description" value="@Model.Description">
+        </div>
+        <div class="mb-1">
+            <label for="price" class="form-label">Price</label>
+            <input type="text" class="form-control" id="price" name="price" value="@Model.Price">
+        </div>
+
+        <button class="btn btn-primary">Change</button>
+    </form>
+}
+else
+{
+    <h1 class="danger">Product not found!</h1>
+}
+
+<script>
+    document.getElementById('ProductForm')
+        .addEventListener('submit', 
+            async function (ev) {
+                ev.preventDefault();
+
+                const name = document.getElementById('name').value;
+                const description = document.getElementById('description').value;
+                const price = document.getElementById('price').value;
+
+                const data = {
+                    name: name,
+                    description: description,
+                    price: price
+                };
+
+                try {
+                    const response = await fetch('/Product/@Model?.Id', {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(data)
+                    });
+
+                    if (response.ok) {
+                        window.history.back();
+                    } 
+                    else {
+                        console.error(response);
+                    }
+                } catch (error) {
+                    console.error('Request failed', error);
+                }
+            });
+</script>
