@@ -1,15 +1,22 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using ClothingStoreApp.Core.Models;
+using ClothingStoreApp.Core.Services;
 
 namespace ClothingStoreApp.Presentation.Controllers;
 
 public class HomeController : Controller
 {
-
+    private readonly IProductService productsService;
+    public HomeController(IProductService productsService)
+    {
+        this.productsService = productsService;
+    }
     public IActionResult Index()
     {
-        return View();
+        var products = productsService.GetAllProducts();
+
+        return View(products);
     }
 
     public IActionResult Privacy()

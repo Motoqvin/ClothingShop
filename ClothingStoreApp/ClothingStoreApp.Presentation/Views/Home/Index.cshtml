@@ -1,7 +1,28 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model List<Product>
+
+@{
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Hello, welcome to our clothing store!</h1>
+<h1>Products</h1>
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+@foreach (var product in Model)
+{
+    <div class="col">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">@product.Name</h5>
+                <p class="card-text">@product.Description</p>
+                <p class="card-text"><strong>$@product.Price</strong></p>
+                <form asp-controller="Cart" asp-action="Add" method="post">
+                    <input type="hidden" name="id" value="@product.Id" />
+                    <input type="hidden" name="name" value="@product.Name" />
+                    <input type="hidden" name="price" value="@product.Price" />
+                    <button type="submit" class="btn btn-primary w-100">Add to Cart</button>
+                </form>
+            </div>
+        </div>
+    </div>
+}
 </div>

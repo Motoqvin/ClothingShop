@@ -29,16 +29,20 @@ builder.Services.AddTransient<IProductService>((serviceProvider) => {
     var repo = serviceProvider.GetRequiredService<IProductsRepository>();
     return new ProductService(repo);
 });
-builder.Services.AddTransient<IOrdersService>((serviceProvider) => {
+builder.Services.AddTransient<IOrdersService>((serviceProvider) =>
+{
     var repo = serviceProvider.GetRequiredService<IOrdersRepository>();
     return new OrdersService(repo);
 });
+
+builder.Services.AddSession();
 
 var app = builder.Build();
 
 app.UseHttpsRedirection();
 app.UseRouting();
 
+app.UseSession();
 app.UseAuthorization();
 
 app.MapStaticAssets();

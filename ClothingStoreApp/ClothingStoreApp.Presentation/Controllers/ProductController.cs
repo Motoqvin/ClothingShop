@@ -41,6 +41,21 @@ public class ProductController : Controller
     }
 
     [HttpGet]
+    public ActionResult<List<Product>> GetAllProducts()
+    {
+        try
+        {
+            var products = productsService.GetAllProducts();
+
+            return base.View("ProductsList", model: products);
+        }
+        catch (Exception)
+        {
+            return base.StatusCode((int)HttpStatusCode.InternalServerError);
+        }
+    }
+
+    [HttpGet]
     [Route("{id}")]
     public ActionResult<Product> GetProductById(int id){
         try{
