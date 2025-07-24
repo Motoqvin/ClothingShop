@@ -4,6 +4,7 @@ using ClothingStoreApp.Core.Responses;
 using ClothingStoreApp.Core.Services;
 using ClothingStoreApp.Core.Dtos;
 using ClothingStoreApp.Core.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ClothingStoreApp.Presentation.Controllers;
 
@@ -27,8 +28,9 @@ public class ProductController : Controller
         return View();
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost]
-    public ActionResult CreateProduct([FromBody]ProductRequestDto product){
+    public ActionResult CreateProduct([FromBody]Product product){
         try{
             productsService.AddProduct(product);
 
@@ -68,6 +70,7 @@ public class ProductController : Controller
         }
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpDelete]
     [Route("{id}")]
     public ActionResult DeleteProduct(int id){
@@ -81,6 +84,7 @@ public class ProductController : Controller
         }
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPut("{id}")]
     public ActionResult UpdateProduct(int id, [FromBody]Product product){
         try{

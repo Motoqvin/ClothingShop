@@ -41,6 +41,7 @@ public class ExceptionHandlerMiddleware
             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
             await context.Response.WriteAsJsonAsync(new InternalServerErrorResponse(message: "Internal server error"));
 
+            System.Console.WriteLine(ex.Message);
             context.Items["exception"] = ex.Message;
         }
     }

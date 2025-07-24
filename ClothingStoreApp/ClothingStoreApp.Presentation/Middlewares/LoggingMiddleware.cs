@@ -61,7 +61,7 @@ public class LoggingMiddleware
 
         var log = new HttpLog
         {
-            RequestId = requestId,
+            Id = requestId,
             Url = context.Request.Path,
             RequestBody = requestBody,
             RequestHeaders = requestHeaders,
@@ -74,6 +74,6 @@ public class LoggingMiddleware
             ClientIp = context.Connection.RemoteIpAddress?.ToString() ?? "Unknown"
         };
 
-        await logger.LogAsync(log);
+        logger.Log(log);
     }
 }

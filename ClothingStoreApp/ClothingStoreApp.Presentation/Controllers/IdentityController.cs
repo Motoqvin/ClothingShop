@@ -1,0 +1,231 @@
+using ClothingStoreApp.Infrastructure.Data;
+using ClothingStoreApp.Core.Dtos;
+using ClothingStoreApp.Core.Enums;
+using ClothingStoreApp.Core.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using ClothingStoreApp.Presentation.ViewModels;
+
+namespace ClothingStoreApp.Presentation.Controllers;
+
+[Route("[controller]/[action]")]
+public class IdentityController : Controller
+{
+    private readonly UserManager<User> userManager;
+    private readonly SignInManager<User> signInManager;
+    private readonly RoleManager<IdentityRole> roleManager;
+    private readonly UsersDbContext dbContext;
+
+    public IdentityController(
+        UserManager<User> userManager,
+        SignInManager<User> signInManager,
+        RoleManager<IdentityRole> roleManager,
+        UsersDbContext dbContext
+        )
+    {
+        this.userManager = userManager;
+        this.signInManager = signInManager;
+        this.roleManager = roleManager;
+        this.dbContext = dbContext;
+    }
+
+    public IActionResult Index()
+    {
+        return View();
+    }
+
+    [HttpGet]
+    public IActionResult Registration()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Registration([FromForm] RegisterViewModel newUser)
+    {
+        if (!ModelState.IsValid)
+        {
+            System.Console.WriteLine("Model state is not valid");
+            return View(newUser);
+        }
+        try
+        {
+            string? avatarPath = null;
+
+            if (newUser.Avatar != null)
+            {
+                var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "avatars");
+                Directory.CreateDirectory(uploadsFolder);
+
+                var fileName = Guid.NewGuid() + Path.GetExtension(newUser.Avatar.FileName);
+                var filePath = Path.Combine(uploadsFolder, fileName);
+
+                using var stream = new FileStream(filePath, FileMode.Create);
+                await newUser.Avatar.CopyToAsync(stream);
+
+                avatarPath = $"uploads/avatars/{fileName}";
+            }
+
+            var user = new User
+            {
+                UserName = newUser.Username,
+                Email = newUser.Email,
+                PhoneNumber = newUser.PhoneNumber,
+                Address = newUser.Address,
+                Avatar = avatarPath
+            };
+
+            var result = await this.userManager.CreateAsync(user, newUser.PasswordHash!);
+
+            System.Console.WriteLine(result);
+            if (result.Succeeded)
+            {
+                await this.userManager.AddToRoleAsync(user, nameof(Roles.User));
+                return RedirectToAction(nameof(Login));
+            }
+            else
+            {
+                foreach (var error in result.Errors)
+                    ModelState.AddModelError(string.Empty, error.Description);
+
+                return View();
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Console.WriteLine(ex.Message);
+            TempData["Error"] = "Something went wrong...";
+            return RedirectToAction("Registration");
+        }
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> MyInfo()
+    {
+        var currentUser = await userManager.GetUserAsync(User);
+        if (currentUser == null)
+            return RedirectToAction("Login");
+
+        var userModel = new User
+        {
+            UserName = currentUser.UserName,
+            Email = currentUser.Email,
+            PhoneNumber = currentUser.PhoneNumber,
+            Address = currentUser.Address,
+            Avatar = currentUser.Avatar
+        };
+
+        return View(userModel);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> EditInfo()
+    {
+        var identityUser = await userManager.GetUserAsync(User);
+        if (identityUser == null)
+            return RedirectToAction("Login");
+
+        var model = new User
+        {
+            UserName = identityUser.UserName,
+            Email = identityUser.Email,
+            PhoneNumber = identityUser.PhoneNumber
+        };
+
+        return View(model);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> EditInfo(User updatedUser)
+    {
+        if (!ModelState.IsValid)
+            return View(updatedUser);
+
+        var identityUser = await userManager.GetUserAsync(User);
+        if (identityUser == null)
+            return RedirectToAction("Login");
+
+        identityUser.UserName = updatedUser.UserName;
+        identityUser.Email = updatedUser.Email;
+        identityUser.PhoneNumber = updatedUser.PhoneNumber;
+
+        var result = await userManager.UpdateAsync(identityUser);
+
+        if (!result.Succeeded)
+        {
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+
+            return View(updatedUser);
+        }
+
+        return RedirectToAction(nameof(MyInfo));
+    }
+
+
+
+    [HttpGet]
+    public ActionResult Login(string? returnUrl)
+    {
+        var errorMessage = base.TempData["Error"];
+
+        if (string.IsNullOrWhiteSpace(returnUrl) == false)
+        {
+            base.ViewData["returnUrl"] = returnUrl;
+        }
+
+        if (errorMessage != null)
+        {
+            base.ModelState.AddModelError("All", errorMessage.ToString()!);
+        }
+
+        return base.View();
+    }
+
+    [HttpPost]
+    public async Task<ActionResult> Login([FromForm] LoginDto dto)
+    {
+        var foundUser = await this.userManager.FindByEmailAsync(dto.Email);
+
+        if (foundUser == null)
+        {
+            base.TempData["Error"] = "Incorrect login or password";
+            return base.RedirectToAction(actionName: nameof(Login));
+        }
+
+        var signInResult = await signInManager.PasswordSignInAsync(foundUser, dto.Password, dto.RememberMe, true);
+
+        if (signInResult.Succeeded == false)
+        {
+            base.TempData["Error"] = "Incorrect login or password";
+            return base.RedirectToAction(actionName: nameof(Login));
+        }
+
+        if (dto.RememberMe)
+        {
+            base.HttpContext.Response.Cookies.Append("RememberMe", "true");
+        }
+        else
+        {
+            base.HttpContext.Response.Cookies.Delete("RememberMe");
+        }
+
+
+        if (string.IsNullOrWhiteSpace(dto.ReturnUrl) == false)
+        {
+            return base.Redirect(dto.ReturnUrl);
+        }
+
+        return base.RedirectToAction(actionName: "Index", controllerName: "Home");
+    }
+
+    [HttpGet]
+    public async Task<ActionResult> Logout()
+    {
+        await signInManager.SignOutAsync();
+
+        return base.RedirectToAction(actionName: "Welcome", controllerName: "Home");
+    }
+}

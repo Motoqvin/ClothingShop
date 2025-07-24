@@ -8,5 +8,5 @@ namespace ClothingStoreApp.Core.Repositories;
 
 public interface IHttpLogRepository
 {
-    public Task InsertAsync(HttpLog log);
+    void InsertAsync(HttpLog log);
 }

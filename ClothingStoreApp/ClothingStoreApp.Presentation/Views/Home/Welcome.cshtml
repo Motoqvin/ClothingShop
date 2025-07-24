@@ -1,0 +1,53 @@
+@{
+    ViewData["Title"] = "Welcome";
+    Layout = "_Layout";
+    bool isAuthenticated = base.User.Identity.IsAuthenticated;
+    string href = "";
+    if (isAuthenticated)
+    {
+        href = Url.Action("Index", "Home");
+    }
+    else
+    {
+        href = Url.Action("Login", "Identity");
+    }
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <h1 class="display-4 mb-4" style="font-family: 'Segoe UI', sans-serif; color: #2d3436;">
+                Welcome to ClothingStoreApp!
+            </h1>
+            <p class="lead mb-5" style="color: #636e72;">
+                Discover the latest trends and timeless classics. Shop your favorite styles with ease and confidence.
+            </p>
+            <a href="@href" class="btn btn-primary btn-lg px-5 py-3" style="font-size: 1.25rem;">
+                Start Shopping
+            </a>
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col-md-4 text-center">
+            <img src="https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=400&q=80"
+                class="img-fluid rounded shadow" alt="Trendy Clothing">
+            <h3 class="mt-3">Trendy Styles</h3>
+            <p>Stay ahead with our curated collection of the latest fashion.</p>
+        </div>
+        <div class="col-md-4 text-center">
+            <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=400&q=80"
+                class="img-fluid rounded shadow" alt="Quality Fabrics">
+            <h3 class="mt-3">Quality Fabrics</h3>
+            <p>Experience comfort and durability with every purchase.</p>
+        </div>
+        <div class="col-md-4 text-center">
+            <img src="https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=400&q=80"
+                class="img-fluid rounded shadow" alt="Fast Delivery">
+            <h3 class="mt-3">Fast Delivery</h3>
+            <p>Get your orders delivered quickly and reliably to your doorstep.</p>
+        </div>
+    </div>
+</div>
+</div>
+</p>
+</div>

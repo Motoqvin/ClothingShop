@@ -22,6 +22,11 @@ public class ProductsDapperRepository : IProductsRepository
         values (@Name, @Description, @Price)", product);
     }
 
+    public void Create(Product product)
+    {
+        throw new NotImplementedException();
+    }
+
     public void Delete(int id)
     {
         using var conn = new SqlConnection(ConnStr);

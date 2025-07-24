@@ -5,7 +5,7 @@ namespace ClothingStoreApp.Core.Services;
 
 public interface IProductService
 {
-    void AddProduct(ProductRequestDto product);
+    void AddProduct(Product product);
     void ChangeProduct(int id, Product product);
     void RemoveProduct(int id);
     Product GetProductById(int id);

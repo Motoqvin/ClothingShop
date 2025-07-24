@@ -1,7 +1,7 @@
 namespace ClothingStoreApp.Core.Models;
 public class HttpLog
 {
-    public required Guid RequestId { get; set; }
+    public required Guid Id { get; set; }
     public required string Url { get; set; }
     public string? RequestBody { get; set; }
     public string? RequestHeaders { get; set; }

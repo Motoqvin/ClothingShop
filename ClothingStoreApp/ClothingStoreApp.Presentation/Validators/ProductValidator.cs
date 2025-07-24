@@ -1,7 +1,7 @@
 using ClothingStoreApp.Core.Models;
 using FluentValidation;
 
-namespace ClothingStoreApp.Infrastructure.Validators;
+namespace ClothingStoreApp.Presentation.Validators;
 
 public class ProductValidator : AbstractValidator<Product>
 {

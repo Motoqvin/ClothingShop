@@ -8,12 +8,8 @@ public class Order
 {
     public int Id { get; set; }
     public DateTime Date { get; set; } = DateTime.Now;
-    public List<Product> Products { get; set; } = new List<Product>();
     public decimal TotalPrice { get; set; }
-
-    public void UpdateTotalPrice()
-    {
-        TotalPrice = Products.Sum(p => p.Price);
-    }
-
+    public string UserId { get; set; } = null!;
+    public User User { get; set; } = null!;
+    public List<OrdersProducts> OrdersProducts { get; set; } = new List<OrdersProducts>();
 }

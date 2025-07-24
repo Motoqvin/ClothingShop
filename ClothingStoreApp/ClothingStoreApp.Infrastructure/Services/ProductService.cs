@@ -14,7 +14,7 @@ public class ProductService : IProductService
         this.productsRepository = productsRepository;
     }
 
-    public void AddProduct(ProductRequestDto product)
+    public void AddProduct(Product product)
     {
         if(product == null){
             throw new BadRequestException(message: "Product is null!", nameof(product));

@@ -48,10 +48,6 @@ public class OrdersService : IOrdersService
             throw new BadRequestException(message: "Invalid id!", nameof(id));
         }
 
-        if(order.Products.Count == 0){
-            throw new BadRequestException(message: "Order must have at least one product!", nameof(order.Products));
-        }
-
         var updatedLines = ordersRepository.Update(id, order);
         if(!updatedLines){
             throw new BadRequestException(message: "Order not updated!", nameof(updatedLines));
@@ -60,9 +56,6 @@ public class OrdersService : IOrdersService
 
     public void SendOrder(Order order)
     {
-        if(order.Products.Count == 0){
-            throw new BadRequestException(message: "Order must have at least one product!", nameof(order.Products));
-        }
 
         ordersRepository.Create(order);
     }

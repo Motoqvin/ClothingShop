@@ -1,5 +1,3 @@
-using System.Net;
-using ClothingStoreApp.Core.Exceptions;
 using ClothingStoreApp.Core.Models;
 using ClothingStoreApp.Core.Repositories;
 using ClothingStoreApp.Core.Services;
@@ -15,8 +13,8 @@ public class HttpLogger : IHttpLogger
         this.httpLogRepository = httpLogRepository;
     }
 
-    public async Task LogAsync(HttpLog httpLog)
+    public void Log(HttpLog httpLog)
     {
-        await httpLogRepository.InsertAsync(httpLog);
+        httpLogRepository.InsertAsync(httpLog);
     }
 }

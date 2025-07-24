@@ -8,6 +8,7 @@ using ClothingStoreApp.Core.Dtos;
 using ClothingStoreApp.Core.Models;
 using ClothingStoreApp.Core.Responses;
 using ClothingStoreApp.Core.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -17,6 +18,7 @@ namespace ClothingStoreApp.Presentation.Controllers;
 [ProducesResponseType((int)HttpStatusCode.BadRequest, Type = typeof(BadRequestResponse))]
 [ProducesResponseType((int)HttpStatusCode.NotFound, Type = typeof(NotFoundResponse))]
 [ProducesResponseType((int)HttpStatusCode.OK)]
+[Authorize(Roles = "User")]
 [Route("[controller]")]
 public class OrderController : Controller
 {
@@ -27,6 +29,7 @@ public class OrderController : Controller
         this.ordersService = ordersService;
     }
 
+    
     [HttpGet]
     public IActionResult GetOrders()
     {
@@ -49,7 +52,7 @@ public class OrderController : Controller
         var order = ordersService.GetOrderById(orderId);
         if (order == null) return base.NotFound("Order not found");
 
-        return base.Ok(order.Products);
+        return base.Ok(order.OrdersProducts);
     }
 
     [HttpGet]
@@ -66,9 +69,7 @@ public class OrderController : Controller
         }
 
         var order = new Order(){
-            Products = orderRequestDto.Products
         };
-        order.UpdateTotalPrice();
 
         ordersService.SendOrder(order);
         return base.Ok(order);
@@ -92,8 +93,6 @@ public class OrderController : Controller
         if(orderToUpdate == null){
             return base.NotFound("Order not found");
         }
-        orderToUpdate.Products.AddRange(order.Products ?? new List<Product>());
-        orderToUpdate.UpdateTotalPrice();
 
         ordersService.RenewOrder(id, orderToUpdate);
         return base.Ok();
