@@ -1,8 +1,11 @@
 @inject IOrdersRepository ordersRepository
+@using System.Security.Claims
 
 @{
     ViewData["Title"] = "Your Orders";
-    var orders = ordersRepository.GetAll();
+
+    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+    var orders = ordersRepository.GetAll(userId ?? string.Empty);
 }
 
 <div class="container mt-5">

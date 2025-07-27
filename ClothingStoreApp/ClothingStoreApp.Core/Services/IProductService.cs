@@ -1,4 +1,3 @@
-using ClothingStoreApp.Core.Dtos;
 using ClothingStoreApp.Core.Models;
 
 namespace ClothingStoreApp.Core.Services;

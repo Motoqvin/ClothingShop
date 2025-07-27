@@ -1,10 +1,20 @@
 using Microsoft.AspNetCore.Mvc;
 using ClothingStoreApp.Core.Models;
 using ClothingStoreApp.Presentation.Extensions;
+using Microsoft.AspNetCore.Identity;
+using ClothingStoreApp.Core.Services;
 
 public class CartController : Controller
 {
     private const string SessionKey = "Cart";
+    private readonly UserManager<User> userManager;
+    private readonly IOrdersService ordersService;
+
+    public CartController(UserManager<User> userManager, IOrdersService ordersService)
+    {
+        this.ordersService = ordersService;
+        this.userManager = userManager;
+    }
 
     public IActionResult Index()
     {
@@ -38,12 +48,40 @@ public class CartController : Controller
     }
 
     [HttpPost]
-    public IActionResult Checkout()
+    public async Task<IActionResult> Checkout()
     {
         var cart = GetCart();
+
+        if (cart.Count == 0)
+        {
+            TempData["Error"] = "Cart is empty.";
+            return RedirectToAction("Index");
+        }
+
+        var user = await userManager.GetUserAsync(User);
+        if (user == null)
+        {
+            TempData["Error"] = "User not found.";
+            return RedirectToAction("Login", "Identity");
+        }
+
+        var order = new Order
+        {
+            UserId = user.Id,
+            TotalPrice = cart.Sum(i => i.Price * i.Quantity),
+            OrdersProducts = [.. cart.Select(item => new OrdersProducts
+            {
+                ProductId = item.ProductId,
+                Quantity = item.Quantity
+            })]
+        };
+
+        ordersService.SendOrder(order);
+
         HttpContext.Session.Remove(SessionKey);
         return View("OrderSuccess");
     }
+
 
     [HttpPost]
     public IActionResult Remove(int id)

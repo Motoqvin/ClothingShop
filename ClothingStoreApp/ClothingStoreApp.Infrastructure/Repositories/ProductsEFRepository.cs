@@ -1,4 +1,3 @@
-using ClothingStoreApp.Core.Dtos;
 using ClothingStoreApp.Core.Exceptions;
 using ClothingStoreApp.Core.Models;
 using ClothingStoreApp.Core.Repositories;

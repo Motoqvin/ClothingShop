@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using ClothingStoreApp.Core.Exceptions;
 using ClothingStoreApp.Core.Models;
 using ClothingStoreApp.Core.Services;

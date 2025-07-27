@@ -1,0 +1,41 @@
+@using Microsoft.AspNetCore.Identity
+@model List<User>
+@inject UserManager<User> UserManager
+@{
+    ViewData["Title"] = "Admin - Users";
+}
+
+<h2 class="mb-4">👤 User Management</h2>
+
+<table class="table table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>Email</th>
+            <th>Username</th>
+            <th>Roles</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.Email</td>
+                <td>@user.UserName</td>
+                <td>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <span class="badge bg-secondary">@string.Join(", ", await UserManager.GetRolesAsync(user))</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary">Restricted</span>
+                    }
+                </td>
+                <td>
+                    <a asp-action="EditUserRoles" asp-route-id="@user.Id" class="btn btn-sm btn-secondary">Edit Roles</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

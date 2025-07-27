@@ -2,7 +2,6 @@ using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using ClothingStoreApp.Core.Responses;
 using ClothingStoreApp.Core.Services;
-using ClothingStoreApp.Core.Dtos;
 using ClothingStoreApp.Core.Models;
 using Microsoft.AspNetCore.Authorization;
 

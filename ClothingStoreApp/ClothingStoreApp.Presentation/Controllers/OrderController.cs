@@ -1,16 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
 using ClothingStoreApp.Core.Dtos;
 using ClothingStoreApp.Core.Models;
 using ClothingStoreApp.Core.Responses;
 using ClothingStoreApp.Core.Services;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace ClothingStoreApp.Presentation.Controllers;
 
@@ -18,7 +11,6 @@ namespace ClothingStoreApp.Presentation.Controllers;
 [ProducesResponseType((int)HttpStatusCode.BadRequest, Type = typeof(BadRequestResponse))]
 [ProducesResponseType((int)HttpStatusCode.NotFound, Type = typeof(NotFoundResponse))]
 [ProducesResponseType((int)HttpStatusCode.OK)]
-[Authorize(Roles = "User")]
 [Route("[controller]")]
 public class OrderController : Controller
 {
@@ -29,7 +21,7 @@ public class OrderController : Controller
         this.ordersService = ordersService;
     }
 
-    
+
     [HttpGet]
     public IActionResult GetOrders()
     {
@@ -42,33 +34,28 @@ public class OrderController : Controller
         var foundOrder = ordersService.GetOrderById(id);
 
         return foundOrder == null
-         ? View("OrderInfo", model: null) 
+         ? View("OrderInfo", model: null)
          : View("OrderInfo", model: foundOrder);
-    }
-
-    [HttpGet("{orderId}/products")]
-    public IActionResult GetOrderProducts(int orderId)
-    {
-        var order = ordersService.GetOrderById(orderId);
-        if (order == null) return base.NotFound("Order not found");
-
-        return base.Ok(order.OrdersProducts);
     }
 
     [HttpGet]
     [Route("Create")]
-    public IActionResult CreatePage(){
+    public IActionResult CreatePage()
+    {
         var order = new Order();
         return View("Create", model: order);
     }
 
     [HttpPost]
-    public IActionResult CreateOrder([FromBody]OrderRequestDto orderRequestDto){
-        if(orderRequestDto == null || orderRequestDto.Products == null || !orderRequestDto.Products.Any()){
+    public IActionResult CreateOrder([FromBody] OrderRequestDto orderRequestDto)
+    {
+        if (orderRequestDto == null || orderRequestDto.Products == null || !orderRequestDto.Products.Any())
+        {
             return base.BadRequest("Order is empty");
         }
 
-        var order = new Order(){
+        var order = new Order()
+        {
         };
 
         ordersService.SendOrder(order);
@@ -77,9 +64,11 @@ public class OrderController : Controller
 
     [HttpDelete]
     [Route("{id:int}")]
-    public IActionResult DeleteOrder(int id){
+    public IActionResult DeleteOrder(int id)
+    {
         var order = ordersService.GetOrderById(id);
-        if(order == null){
+        if (order == null)
+        {
             return base.NotFound("Order not found");
         }
 
@@ -88,13 +77,40 @@ public class OrderController : Controller
     }
 
     [HttpPut("{id}")]
-    public IActionResult UpdateOrder(int id, [FromBody]OrderRequestDto order){
+    public IActionResult UpdateOrder(int id, [FromBody] OrderRequestDto order)
+    {
         var orderToUpdate = ordersService.GetOrderById(id);
-        if(orderToUpdate == null){
+        if (orderToUpdate == null)
+        {
             return base.NotFound("Order not found");
         }
 
         ordersService.RenewOrder(id, orderToUpdate);
         return base.Ok();
+    }
+    
+    [HttpGet("{orderId}/products")]
+    public IActionResult GetOrderProducts(int orderId)
+    {
+        var result = ordersService.GetOrderProducts(orderId);
+        return Ok(result);
+    }
+
+    [HttpPost("{orderId}/AddExistingProduct")]
+    public IActionResult AddExistingProductToOrder(int orderId, [FromBody] AddProductDto dto)
+    {
+        if (!ordersService.AddProductToOrder(orderId, dto))
+            return NotFound("Order or product not found");
+
+        return Ok();
+    }
+
+    [HttpDelete("{orderId}/products/{productId}")]
+    public IActionResult RemoveProductFromOrder(int orderId, int productId)
+    {
+        if (!ordersService.RemoveProductFromOrder(orderId, productId))
+            return NotFound();
+
+        return Ok();
     }
 }

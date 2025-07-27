@@ -8,9 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using ClothingStoreApp.Core.Models;
 using ClothingStoreApp.Infrastructure.Data;
-using FluentValidation.AspNetCore;
 using FluentValidation;
-using ClothingStoreApp.Presentation.Validators;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,16 +18,13 @@ builder.Services.AddTransient<IProductsRepository, ProductsEFRepository>();
 builder.Services.AddTransient<IOrdersRepository, OrdersEFRepository>();
 
 builder.Services.AddDbContext<StoreDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("SqlDB")));
-
-builder.Services.AddDbContext<UsersDbContext>(options =>
 {
     var connectionString = builder.Configuration.GetConnectionString("IdentityDb");
     options.UseSqlServer(connectionString);
 });
 
 builder.Services.AddIdentity<User, IdentityRole>()
-    .AddEntityFrameworkStores<UsersDbContext>()
+    .AddEntityFrameworkStores<StoreDbContext>()
     .AddDefaultTokenProviders();
 
 builder.Services.AddTransient<IHttpLogRepository, HttpLogEFRepository>();
@@ -45,7 +40,8 @@ builder.Services.AddTransient<IProductService>((serviceProvider) => {
 builder.Services.AddTransient<IOrdersService>((serviceProvider) =>
 {
     var repo = serviceProvider.GetRequiredService<IOrdersRepository>();
-    return new OrdersService(repo);
+    var productRepo = serviceProvider.GetRequiredService<IProductsRepository>();
+    return new OrdersService(repo, productRepo);
 });
 
 builder.Services.AddAuthentication(defaultScheme: CookieAuthenticationDefaults.AuthenticationScheme)
@@ -57,11 +53,28 @@ builder.Services.AddAuthentication(defaultScheme: CookieAuthenticationDefaults.A
             options.LogoutPath = "/Identity/Logout";
         });
 
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.Cookie.HttpOnly = true;
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+    options.SlidingExpiration = true;
+    options.LoginPath = "/Identity/Login";
+    options.LogoutPath = "/Identity/Logout";
+    options.AccessDeniedPath = "/Identity/AccessDenied";
+});
+
 builder.Services.AddAuthorizationBuilder()
-    .AddPolicy(name: "MyPolicy", configurePolicy: policyBuilder => {
-            policyBuilder
-                .RequireRole("Admin");
-        }
+    .AddPolicy("AdminOnly", policy =>
+    {
+        policy.RequireRole("Admin");
+    });
+
+builder.Services.AddAuthorizationBuilder()
+    .AddPolicy(name: "MyPolicy", configurePolicy: policyBuilder =>
+    {
+        policyBuilder
+            .RequireRole("Admin");
+    }
 );
 
 builder.Services.AddSession();
@@ -77,12 +90,37 @@ var app = builder.Build();
 var serviceScope = app.Services.CreateScope();
 var roleManager = serviceScope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
-await roleManager.CreateAsync(new IdentityRole {Name = "Admin"});
 await roleManager.CreateAsync(new IdentityRole {Name = "User"});
+
+static async Task SeedAdmin(IServiceProvider services)
+{
+    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+    var userManager = services.GetRequiredService<UserManager<User>>();
+
+    if (!await roleManager.RoleExistsAsync("Admin"))
+    {
+        await roleManager.CreateAsync(new IdentityRole("Admin"));
+    }
+
+    var adminEmail = "admin@store.com";
+    var adminUser = await userManager.FindByEmailAsync(adminEmail);
+    if (adminUser == null)
+    {
+        adminUser = new User
+        {
+            UserName = "admin",
+            Email = adminEmail,
+            EmailConfirmed = true
+        };
+        await userManager.CreateAsync(adminUser, "Admin123!");
+        await userManager.AddToRoleAsync(adminUser, "Admin");
+    }
+}
 
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<StoreDbContext>();
+    await SeedAdmin(scope.ServiceProvider);
     dbContext.Database.EnsureCreated();
 }
 

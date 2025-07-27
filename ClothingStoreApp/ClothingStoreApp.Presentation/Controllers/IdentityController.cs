@@ -14,13 +14,13 @@ public class IdentityController : Controller
     private readonly UserManager<User> userManager;
     private readonly SignInManager<User> signInManager;
     private readonly RoleManager<IdentityRole> roleManager;
-    private readonly UsersDbContext dbContext;
+    private readonly StoreDbContext dbContext;
 
     public IdentityController(
         UserManager<User> userManager,
         SignInManager<User> signInManager,
         RoleManager<IdentityRole> roleManager,
-        UsersDbContext dbContext
+        StoreDbContext dbContext
         )
     {
         this.userManager = userManager;

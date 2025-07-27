@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
 using ClothingStoreApp.Core.Exceptions;
 using ClothingStoreApp.Core.Responses;
 

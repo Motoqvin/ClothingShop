@@ -1,0 +1,16 @@
+@{
+    ViewData["Title"] = "Admin Panel";
+}
+<h2 class="mb-4">🛠 Admin Dashboard</h2>
+
+<ul class="list-group">
+    <li class="list-group-item">
+        <a asp-action="Products" asp-controller="Admin">🧥 Manage Products</a>
+    </li>
+    <li class="list-group-item">
+        <a asp-action="Orders" asp-controller="Admin">📦 Manage Orders</a>
+    </li>
+    <li class="list-group-item">
+        <a asp-action="Users" asp-controller="Admin">👥 Manage Users</a>
+    </li>
+</ul>
