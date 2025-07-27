@@ -51,7 +51,7 @@ public class ProductService : IProductService
 
         var isOk = productsRepository.Update(id, changedProduct);
         if(!isOk){
-            throw new BadRequestException(message: "Product not updated!", nameof(isOk));
+            throw new NotFoundException(message: "Product not updated!");
         }
     }
 
@@ -80,6 +80,7 @@ public class ProductService : IProductService
         if(id <= 0){
             throw new BadRequestException(message: "Invalid id!", nameof(id));
         }
+        var product = productsRepository.GetById(id) ?? throw new NotFoundException(message: "Product not found!");
         productsRepository.Delete(id);
     }
 }

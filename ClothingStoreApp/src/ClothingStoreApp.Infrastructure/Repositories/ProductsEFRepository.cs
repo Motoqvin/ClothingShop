@@ -36,7 +36,7 @@ public class ProductsEFRepository : IProductsRepository
 
     public bool Update(int id, Product product)
     {
-        var existingProduct = dbContext.Products.FirstOrDefault(p => p.Id == id) ?? throw new BadRequestException(message: "Product not found!", nameof(id));
+        var existingProduct = dbContext.Products.FirstOrDefault(p => p.Id == id) ?? throw new NotFoundException(message: "Product not found!");
         existingProduct.Name = product.Name;
         existingProduct.Description = product.Description;
         existingProduct.Price = product.Price;

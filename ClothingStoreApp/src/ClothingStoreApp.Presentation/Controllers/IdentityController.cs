@@ -191,7 +191,6 @@ public class IdentityController : Controller
 
         if (foundUser == null)
         {
-            base.TempData["Error"] = "Incorrect login or password";
             return base.RedirectToAction(actionName: nameof(Login));
         }
 
@@ -199,17 +198,7 @@ public class IdentityController : Controller
 
         if (signInResult.Succeeded == false)
         {
-            base.TempData["Error"] = "Incorrect login or password";
             return base.RedirectToAction(actionName: nameof(Login));
-        }
-
-        if (dto.RememberMe)
-        {
-            base.HttpContext.Response.Cookies.Append("RememberMe", "true");
-        }
-        else
-        {
-            base.HttpContext.Response.Cookies.Delete("RememberMe");
         }
 
 
