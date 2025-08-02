@@ -1,4 +1,5 @@
-﻿@model List<Product>
+﻿@using X.PagedList.Mvc.Core
+@model X.PagedList.IPagedList<Product>
 
 @{
     ViewData["Title"] = "Home";
@@ -26,4 +27,20 @@
         </div>
     </div>
 }
+</div>
+
+<br />
+
+<div class="d-flex justify-content-center">
+    @Html.PagedListPager(Model, page => Url.Action("Index", 
+        new { page }), options: new PagedListRenderOptions{
+            UlElementClasses = new[] { "pagination", "mt-4" },
+            LiElementClasses = new[] { "page-item" },
+            PageClasses = new[] { "page-link" },
+            DisplayLinkToFirstPage = PagedListDisplayMode.Always,
+            DisplayLinkToLastPage = PagedListDisplayMode.Always,
+            DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+            DisplayLinkToNextPage = PagedListDisplayMode.Always,
+            MaximumPageNumbersToDisplay = 5
+        })
 </div>

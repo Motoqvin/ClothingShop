@@ -1,5 +1,6 @@
 @using Microsoft.AspNetCore.Identity
-@model List<User>
+@using X.PagedList.Mvc.Core
+@model X.PagedList.IPagedList<User>
 @inject UserManager<User> UserManager
 @{
     ViewData["Title"] = "Admin - Users";
@@ -39,3 +40,17 @@
         }
     </tbody>
 </table>
+
+<div class="d-flex justify-content-center">
+    @Html.PagedListPager(Model, page => Url.Action("Users", 
+        new { page }), options: new PagedListRenderOptions{
+            UlElementClasses = new[] { "pagination", "mt-4" },
+            LiElementClasses = new[] { "page-item" },
+            PageClasses = new[] { "page-link" },
+            DisplayLinkToFirstPage = PagedListDisplayMode.Always,
+            DisplayLinkToLastPage = PagedListDisplayMode.Always,
+            DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+            DisplayLinkToNextPage = PagedListDisplayMode.Always,
+            MaximumPageNumbersToDisplay = 5
+        })
+</div>

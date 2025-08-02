@@ -57,21 +57,13 @@ public class ProductService : IProductService
 
     public List<Product> GetAllProducts()
     {
-        var products = productsRepository.GetAll();
-        if(products == null){
-            throw new NotFoundException(message: "Products not found!");
-        }
+        var products = productsRepository.GetAll() ?? throw new NotFoundException(message: "Products not found!");
         return products;
     }
 
     public Product GetProductById(int id)
     {
-        var prod = productsRepository.GetById(id);
-
-        if(prod == null){
-            throw new NotFoundException(message: "Product not found!");
-        }
-        
+        var prod = productsRepository.GetById(id) ?? throw new NotFoundException(message: "Product not found!");
         return prod;
     }
 

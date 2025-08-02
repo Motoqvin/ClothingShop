@@ -7,9 +7,17 @@ using ClothingStoreApp.Infrastructure.Services;
 using System.Security.Claims;
 using ClothingStoreApp.Presentation.ViewModels;
 using ClothingStoreApp.Core.Exceptions;
+using X.PagedList.Extensions;
+using System.Threading.Tasks;
+using System.Net;
+using ClothingStoreApp.Core.Responses;
 
 namespace ClothingStoreApp.Presentation.Controllers;
 
+[ProducesResponseType((int)HttpStatusCode.InternalServerError, Type = typeof(InternalServerErrorResponse))]
+[ProducesResponseType((int)HttpStatusCode.BadRequest, Type = typeof(BadRequestResponse))]
+[ProducesResponseType((int)HttpStatusCode.NotFound, Type = typeof(NotFoundResponse))]
+[ProducesResponseType((int)HttpStatusCode.OK)]
 [Authorize(Roles = "Admin")]
 public class AdminController : Controller
 {
@@ -43,10 +51,13 @@ public class AdminController : Controller
         return View(orders);
     }
 
-    public IActionResult Users()
+    public IActionResult Users(int? page)
     {
         var users = userManager.Users.ToList();
-        return View(users);
+        int pageSize = 6;
+        int pageNum = page ?? 1;
+
+        return View(users.ToPagedList(pageNum, pageSize));
     }
 
     [HttpGet]
@@ -55,6 +66,7 @@ public class AdminController : Controller
     [HttpPost]
     public IActionResult CreateProduct(Product product)
     {
+        if (!ModelState.IsValid) throw new BadRequestException("Product must be valid", nameof(product));
         productService.AddProduct(product);
         return RedirectToAction("Products");
     }
@@ -67,26 +79,26 @@ public class AdminController : Controller
         return View(product);
     }
 
-    [HttpPost]
+    [HttpPut]
     public IActionResult EditProduct(Product product)
     {
         productService.ChangeProduct(product.Id, product);
         return RedirectToAction("Products");
     }
 
-    [HttpPost]
+    [HttpDelete]
     public IActionResult DeleteProduct(int id)
     {
         productService.RemoveProduct(id);
         return RedirectToAction("Products");
     }
 
-    public IActionResult EditUserRoles(string id)
+    public async Task<IActionResult> EditUserRoles(string id)
     {
         var user = userManager.FindByIdAsync(id).Result;
         var roles = roleManager.Roles.Select(r => r.Name).ToList();
 
-        var userRoles = userManager.GetRolesAsync(user!).Result;
+        var userRoles = await userManager.GetRolesAsync(user!);
 
         var model = new EditUserRolesViewModel
         {
