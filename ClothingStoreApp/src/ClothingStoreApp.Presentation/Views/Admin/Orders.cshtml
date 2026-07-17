@@ -1,0 +1,32 @@
+@model List<Order>
+@{
+    ViewData["Title"] = "Admin - Orders";
+}
+
+<h2 class="mb-4">🧾 Order Management</h2>
+
+<table class="table table-hover">
+    <thead class="table-dark">
+        <tr>
+            <th>ID</th>
+            <th>User</th>
+            <th>Date</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var order in Model)
+        {
+            <tr>
+                <td>
+                <a asp-controller="Admin" asp-action="OrderDetails" asp-route-id="@order.Id">
+                    #@order.Id
+                </a>
+                </td>
+                <td>@order.UserId</td>
+                <td>@order.Date.ToString("yyyy-MM-dd HH:mm")</td>
+                <td>$@order.TotalPrice</td>
+            </tr>
+        }
+    </tbody>
+</table>

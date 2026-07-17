@@ -1,0 +1,145 @@
+@model Order?
+
+@using System.Globalization
+@inject IProductsRepository productRepository
+
+@{
+  ViewData["Title"] = "Order Details";
+  var orderId = Model?.Id ?? 0;
+  var storeProducts = productRepository.GetAll(); // Fetch all available products
+}
+
+@if (Model != null)
+{
+  <div class="container mt-5">
+    <h2 class="mb-4">🧾 Order #@Model.Id</h2>
+    <div class="mb-3">
+      <strong>Date:</strong> @Model.Date.ToString("yyyy-MM-dd HH:mm")
+    </div>
+    <div class="mb-4">
+      <strong>Total Price:</strong> $@Model.TotalPrice.ToString("F2", CultureInfo.InvariantCulture)
+    </div>
+
+    <h4 class="mb-3">Add Product from Store</h4>
+    <form id="ProductForm" class="row g-3" method="post">
+      <div class="col-md-6">
+        <select class="form-select" id="productSelect" required>
+          <option selected disabled value="">Choose a product...</option>
+          @foreach (var product in storeProducts)
+          {
+            <option value="@product.Id">
+              @product.Name — $@product.Price
+            </option>
+          }
+        </select>
+      </div>
+      <div class="col-md-3">
+        <input type="number" class="form-control" id="quantity" placeholder="Qty" min="1" value="1" required>
+      </div>
+      <div class="col-md-3">
+        <button type="submit" class="btn btn-success w-100">➕ Add</button>
+      </div>
+    </form>
+
+    <hr class="my-4" />
+
+    <h4>🛒 Products in This Order</h4>
+    <table class="table table-bordered table-hover mt-3 align-middle">
+      <thead class="table-dark">
+        <tr>
+          <th>Product</th>
+          <th>Price ($)</th>
+          <th>Quantity</th>
+          <th>Total ($)</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="productList">
+      </tbody>
+    </table>
+    <button id="saveOrderBtn" class="btn btn-primary mt-4">
+      <i class="bi bi-save"></i> Save Order
+    </button>
+  </div>
+}
+else
+{
+  <div class="alert alert-danger mt-5 text-center">
+    Order not found!
+  </div>
+}
+
+@section Scripts {
+  <script>
+    const orderId = @orderId;
+
+    document.addEventListener("DOMContentLoaded", () => {
+      loadProducts();
+    });
+
+    document.getElementById("ProductForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const productId = parseInt(document.getElementById("productSelect").value);
+      const quantity = parseInt(document.getElementById("quantity").value);
+
+      if (isNaN(productId) || isNaN(quantity) || quantity <= 0) return;
+
+      const productData = { productId, quantity };
+
+      const res = await fetch(`/Order/${orderId}/AddExistingProduct`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(productData)
+      });
+
+      if (res.ok) {
+        document.getElementById("ProductForm").reset();
+        loadProducts();
+      } else {
+        alert("Failed to add product to order.");
+      }
+    });
+
+    async function loadProducts() {
+      const res = await fetch(`/Order/${orderId}/products`);
+      if (!res.ok) return alert("Failed to load products");
+
+      const products = await res.json();
+      const productList = document.getElementById("productList");
+      productList.innerHTML = "";
+
+      products.forEach(p => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+                      <td>${p.name}</td>
+                      <td>${p.price.toFixed(2)}</td>
+                      <td>${p.quantity}</td>
+                      <td>${(p.price * p.quantity).toFixed(2)}</td>
+                      <td>
+                          <button class="btn btn-danger btn-sm" onclick="deleteProduct(${p.id})">Remove</button>
+                      </td>
+                  `;
+        productList.appendChild(row);
+      });
+    }
+
+    async function deleteProduct(productId) {
+      if (!confirm("Remove this product from order?")) return;
+
+      const res = await fetch(`/Order/${orderId}/products/${productId}`, {
+        method: "DELETE"
+      });
+
+      if (res.ok) {
+        loadProducts();
+      } else {
+        alert("Failed to delete.");
+      }
+    }
+
+    document.getElementById("saveOrderBtn").addEventListener("click", async () => {
+      window.location.href = '/Home/Index'; 
+    });
+  </script>
+}

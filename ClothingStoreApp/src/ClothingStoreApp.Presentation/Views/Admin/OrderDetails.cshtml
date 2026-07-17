@@ -1,0 +1,26 @@
+@model Order
+
+<h2>Order #@Model.Id</h2>
+<p><strong>Date:</strong> @Model.Date</p>
+<p><strong>User:</strong> @Model.UserId</p>
+<p><strong>Total:</strong> $@Model.TotalPrice</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Price</th>
+            <th>Quantity</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var op in Model.OrdersProducts)
+        {
+            <tr>
+                <td>@op.Product.Name</td>
+                <td>$@op.Product.Price</td>
+                <td>@op.Quantity</td>
+            </tr>
+        }
+    </tbody>
+</table>

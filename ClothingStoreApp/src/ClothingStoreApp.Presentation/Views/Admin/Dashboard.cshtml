@@ -1,0 +1,64 @@
+@model ClothingStoreApp.Presentation.ViewModels.AdminDashboardViewModel
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<h2 class="mb-4">📊 Admin Dashboard</h2>
+
+<div class="row g-4">
+    <div class="col-md-6 col-xl-3">
+        <div class="card border-0 shadow-sm rounded-4 text-white bg-primary h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <h5 class="card-title">Total Orders</h5>
+                        <h2>@Model.TotalOrders</h2>
+                    </div>
+                    <i class="bi bi-bag-fill fs-1"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-xl-3">
+        <div class="card border-0 shadow-sm rounded-4 text-white bg-success h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <h5 class="card-title">Total Users</h5>
+                        <h2>@Model.TotalUsers</h2>
+                    </div>
+                    <i class="bi bi-people-fill fs-1"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-xl-3">
+        <div class="card border-0 shadow-sm rounded-4 text-white bg-warning h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <h5 class="card-title">Total Products</h5>
+                        <h2>@Model.TotalProducts</h2>
+                    </div>
+                    <i class="bi bi-box-seam fs-1"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-xl-3">
+        <div class="card border-0 shadow-sm rounded-4 text-white bg-danger h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div>
+                        <h5 class="card-title">Total Revenue</h5>
+                        <h2>$@Model.TotalRevenue.ToString("N2")</h2>
+                    </div>
+                    <i class="bi bi-currency-dollar fs-1"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,69 @@
+@model List<CartItem>
+
+@{
+    ViewData["Title"] = "Your Cart";
+    var totalPrice = Model.Sum(item => item.Price * item.Quantity);
+}
+
+<div class="container">
+    <h1 class="mb-4 text-center">🛒 Your Shopping Cart</h1>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info text-center">
+            Your cart is empty. <a asp-controller="Home" asp-action="Index">Continue shopping</a>.
+        </div>
+    }
+    else
+    {
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped align-middle">
+                        <thead class="table-dark">
+                            <tr>
+                                <th scope="col">Product</th>
+                                <th scope="col">Quantity</th>
+                                <th scope="col">Price</th>
+                                <th scope="col">Total</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.ProductName</td>
+                                <td>@item.Quantity</td>
+                                <td>$@item.Price</td>
+                                <td>$@(item.Quantity * item.Price)</td>
+                                <td>
+                                    <form asp-action="Remove" method="post" style="display:inline;">
+                                        <input type="hidden" name="id" value="@item.ProductId" />
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                                            <i class="bi bi-trash"></i> Remove
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                        </tbody>
+                        <tfoot class="table-light">
+                            <tr>
+                                <td colspan="3" class="text-end"><strong>Grand Total:</strong></td>
+                                <td><strong>$@totalPrice</strong></td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+                <form asp-action="Checkout" method="post" class="text-end mt-4">
+                    <button type="submit" class="btn btn-success btn-lg">
+                        <i class="bi bi-bag-check-fill"></i> Place Order
+                    </button>
+                </form>
+            </div>
+        </div>
+    }
+</div>
