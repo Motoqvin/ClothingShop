@@ -40,6 +40,7 @@ public class ProductsEFRepository : IProductsRepository
         existingProduct.Name = product.Name;
         existingProduct.Description = product.Description;
         existingProduct.Price = product.Price;
+        existingProduct.ImageUrl = product.ImageUrl;
 
         dbContext.SaveChanges();
         return true;

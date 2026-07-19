@@ -3,32 +3,74 @@
     ViewData["Title"] = "Admin - Products";
 }
 
-<h2 class="mb-4">📦 Product Management</h2>
-<a class="btn btn-primary mb-3" asp-action="CreateProduct">Add New Product</a>
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <h2 class="mb-0">📦 Product Management</h2>
+    <a class="btn btn-primary rounded-3" asp-action="CreateProduct">
+        <i class="bi bi-plus-lg me-1"></i>Add New Product
+    </a>
+</div>
 
-<table class="table table-bordered table-striped">
-    <thead class="table-dark">
-        <tr>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Price</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
+@if (!Model.Any())
+{
+    <div class="text-center text-muted py-5 bg-white rounded-4 shadow-sm">
+        <i class="bi bi-box-seam display-4 d-block mb-3"></i>
+        <p class="mb-3">No products yet. Add your first one to get started.</p>
+        <a class="btn btn-primary rounded-3" asp-action="CreateProduct">
+            <i class="bi bi-plus-lg me-1"></i>Add New Product
+        </a>
+    </div>
+}
+else
+{
+    <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">
         @foreach (var product in Model)
         {
-            <tr>
-                <td>@product.Name</td>
-                <td>@product.Description</td>
-                <td>$@product.Price</td>
-                <td>
-                    <a asp-action="EditProduct" asp-route-id="@product.Id" class="btn btn-sm btn-warning">Edit</a>
-                    <form asp-action="DeleteProduct" asp-route-id="@product.Id" method="post" style="display:inline">
-                        <button class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
-                    </form>
-                </td>
-            </tr>
+            <div class="col">
+                <div class="card h-100 border-0 shadow-sm rounded-4 product-admin-card">
+                    <div class="ratio ratio-4x3 bg-light rounded-top-4 overflow-hidden">
+                        @if (!string.IsNullOrWhiteSpace(product.ImageUrl))
+                        {
+                            <img src="@product.ImageUrl" class="w-100 h-100" style="object-fit: cover;" alt="@product.Name"
+                                 onerror="this.onerror=null;this.src='https://placehold.co/400x300?text=No+Image';" />
+                        }
+                        else
+                        {
+                            <div class="d-flex align-items-center justify-content-center h-100 text-muted">
+                                <i class="bi bi-image fs-1"></i>
+                            </div>
+                        }
+                    </div>
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title mb-1 text-truncate" title="@product.Name">@product.Name</h5>
+                        <p class="card-text text-muted small flex-grow-1" style="min-height: 2.5em;">
+                            @(string.IsNullOrWhiteSpace(product.Description) ? "No description" : product.Description)
+                        </p>
+                        <p class="fw-bold fs-5 text-primary mb-3">$@product.Price.ToString("N2")</p>
+                        <div class="d-flex gap-2">
+                            <a asp-action="EditProduct" asp-route-id="@product.Id" class="btn btn-sm btn-outline-warning flex-fill rounded-3">
+                                <i class="bi bi-pencil-square me-1"></i>Edit
+                            </a>
+                            <form asp-action="DeleteProduct" asp-route-id="@product.Id" method="post" class="flex-fill"
+                                  onsubmit="return confirm('Delete &quot;@product.Name&quot;? This cannot be undone.');">
+                                <button class="btn btn-sm btn-outline-danger w-100 rounded-3" type="submit">
+                                    <i class="bi bi-trash3 me-1"></i>Delete
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
         }
-    </tbody>
-</table>
+    </div>
+}
+
+<style>
+    .product-admin-card {
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .product-admin-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.1) !important;
+    }
+</style>

@@ -1,16 +1,58 @@
 @{
     ViewData["Title"] = "Admin Panel";
 }
-<h2 class="mb-4">🛠 Admin Dashboard</h2>
+<h2 class="mb-4">🛠 Admin Panel</h2>
 
-<ul class="list-group">
-    <li class="list-group-item">
-        <a asp-action="Products" asp-controller="Admin">🧥 Manage Products</a>
-    </li>
-    <li class="list-group-item">
-        <a asp-action="Orders" asp-controller="Admin">📦 Manage Orders</a>
-    </li>
-    <li class="list-group-item">
-        <a asp-action="Users" asp-controller="Admin">👥 Manage Users</a>
-    </li>
-</ul>
+<div class="row g-4">
+    <div class="col-md-6 col-xl-3">
+        <a asp-action="Dashboard" class="text-decoration-none">
+            <div class="card border-0 shadow-sm rounded-4 h-100 admin-index-card">
+                <div class="card-body text-center py-4">
+                    <i class="bi bi-speedometer2 fs-1 text-primary d-block mb-3"></i>
+                    <h5 class="card-title text-dark mb-0">Dashboard</h5>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-6 col-xl-3">
+        <a asp-action="Products" class="text-decoration-none">
+            <div class="card border-0 shadow-sm rounded-4 h-100 admin-index-card">
+                <div class="card-body text-center py-4">
+                    <i class="bi bi-box-seam fs-1 text-success d-block mb-3"></i>
+                    <h5 class="card-title text-dark mb-0">Manage Products</h5>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-6 col-xl-3">
+        <a asp-action="Orders" class="text-decoration-none">
+            <div class="card border-0 shadow-sm rounded-4 h-100 admin-index-card">
+                <div class="card-body text-center py-4">
+                    <i class="bi bi-bag-check fs-1 text-warning d-block mb-3"></i>
+                    <h5 class="card-title text-dark mb-0">Manage Orders</h5>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-6 col-xl-3">
+        <a asp-action="Users" class="text-decoration-none">
+            <div class="card border-0 shadow-sm rounded-4 h-100 admin-index-card">
+                <div class="card-body text-center py-4">
+                    <i class="bi bi-people fs-1 text-danger d-block mb-3"></i>
+                    <h5 class="card-title text-dark mb-0">Manage Users</h5>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
+
+<style>
+    .admin-index-card {
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .admin-index-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.1) !important;
+    }
+</style>

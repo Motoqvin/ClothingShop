@@ -8,7 +8,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using ClothingStoreApp.Core.Models;
 using ClothingStoreApp.Infrastructure.Data;
+using ClothingStoreApp.Core.Settings;
 using FluentValidation;
+using FluentValidation.AspNetCore;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,6 +28,9 @@ builder.Services.AddDbContext<StoreDbContext>(options =>
 builder.Services.AddIdentity<User, IdentityRole>()
     .AddEntityFrameworkStores<StoreDbContext>()
     .AddDefaultTokenProviders();
+
+builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("Smtp"));
+builder.Services.AddTransient<IEmailService, SmtpEmailService>();
 
 builder.Services.AddTransient<IHttpLogRepository, HttpLogEFRepository>();
 
@@ -80,6 +85,9 @@ builder.Services.AddAuthorizationBuilder()
 builder.Services.AddSession();
 
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddFluentValidationClientsideAdapters();
 
 builder.Services.AddValidatorsFromAssemblies([
     Assembly.GetExecutingAssembly(),

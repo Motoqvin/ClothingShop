@@ -37,10 +37,17 @@ public class IdentityController : Controller
     [HttpGet]
     public IActionResult Registration()
     {
+        var errorMessage = TempData["Error"];
+        if (errorMessage != null)
+        {
+            ModelState.AddModelError(string.Empty, errorMessage.ToString()!);
+        }
+
         return View();
     }
 
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Registration([FromForm] RegisterViewModel newUser)
     {
         if (!ModelState.IsValid)
@@ -88,7 +95,8 @@ public class IdentityController : Controller
                 foreach (var error in result.Errors)
                     ModelState.AddModelError(string.Empty, error.Description);
 
-                return View();
+                newUser.PasswordHash = string.Empty;
+                return View(newUser);
             }
         }
         catch (Exception ex)
@@ -125,29 +133,59 @@ public class IdentityController : Controller
         if (identityUser == null)
             return RedirectToAction("Login");
 
-        var model = new User
+        var model = new EditInfoViewModel
         {
-            UserName = identityUser.UserName,
-            Email = identityUser.Email,
-            PhoneNumber = identityUser.PhoneNumber
+            UserName = identityUser.UserName!,
+            Email = identityUser.Email!,
+            PhoneNumber = identityUser.PhoneNumber,
+            CurrentAvatar = identityUser.Avatar
         };
 
         return View(model);
     }
 
     [HttpPost]
-    public async Task<IActionResult> EditInfo(User updatedUser)
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> EditInfo(EditInfoViewModel updatedUser)
     {
-        if (!ModelState.IsValid)
-            return View(updatedUser);
-
         var identityUser = await userManager.GetUserAsync(User);
         if (identityUser == null)
             return RedirectToAction("Login");
 
+        if (!ModelState.IsValid)
+        {
+            updatedUser.CurrentAvatar = identityUser.Avatar;
+            return View(updatedUser);
+        }
+
         identityUser.UserName = updatedUser.UserName;
         identityUser.Email = updatedUser.Email;
         identityUser.PhoneNumber = updatedUser.PhoneNumber;
+
+        if (updatedUser.Avatar != null && updatedUser.Avatar.Length > 0)
+        {
+            var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "avatars");
+            Directory.CreateDirectory(uploadsFolder);
+
+            var fileName = Guid.NewGuid() + Path.GetExtension(updatedUser.Avatar.FileName);
+            var filePath = Path.Combine(uploadsFolder, fileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await updatedUser.Avatar.CopyToAsync(stream);
+            }
+
+            if (!string.IsNullOrEmpty(identityUser.Avatar))
+            {
+                var oldFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", identityUser.Avatar);
+                if (System.IO.File.Exists(oldFilePath))
+                {
+                    System.IO.File.Delete(oldFilePath);
+                }
+            }
+
+            identityUser.Avatar = $"uploads/avatars/{fileName}";
+        }
 
         var result = await userManager.UpdateAsync(identityUser);
 
@@ -158,6 +196,7 @@ public class IdentityController : Controller
                 ModelState.AddModelError(string.Empty, error.Description);
             }
 
+            updatedUser.CurrentAvatar = identityUser.Avatar;
             return View(updatedUser);
         }
 
@@ -178,27 +217,32 @@ public class IdentityController : Controller
 
         if (errorMessage != null)
         {
-            base.ModelState.AddModelError("All", errorMessage.ToString()!);
+            base.ModelState.AddModelError(string.Empty, errorMessage.ToString()!);
         }
 
         return base.View();
     }
 
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<ActionResult> Login([FromForm] LoginDto dto)
     {
         var foundUser = await this.userManager.FindByEmailAsync(dto.Email);
 
         if (foundUser == null)
         {
-            return base.RedirectToAction(actionName: nameof(Login));
+            TempData["Error"] = "Invalid email or password.";
+            return base.RedirectToAction(actionName: nameof(Login), routeValues: new { returnUrl = dto.ReturnUrl });
         }
 
         var signInResult = await signInManager.PasswordSignInAsync(foundUser, dto.Password, dto.RememberMe, true);
 
         if (signInResult.Succeeded == false)
         {
-            return base.RedirectToAction(actionName: nameof(Login));
+            TempData["Error"] = signInResult.IsLockedOut
+                ? "Your account has been locked due to multiple failed login attempts. Please try again later."
+                : "Invalid email or password.";
+            return base.RedirectToAction(actionName: nameof(Login), routeValues: new { returnUrl = dto.ReturnUrl });
         }
 
 
