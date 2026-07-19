@@ -65,7 +65,7 @@ public class AdminControllerTests
         var users = new List<User> { new User { Id = "1", Email = "test@example.com" } }.AsQueryable();
         userManager.SetupGet(um => um.Users).Returns(users);
 
-        var result = controller.Users();
+        var result = controller.Users(1);
 
         var view = Assert.IsType<ViewResult>(result);
         Assert.Equal(users.ToList(), view.Model);

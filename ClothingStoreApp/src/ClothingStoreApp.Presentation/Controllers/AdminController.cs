@@ -64,10 +64,12 @@ public class AdminController : Controller
     public IActionResult CreateProduct() => View();
 
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public IActionResult CreateProduct(Product product)
     {
         if (!ModelState.IsValid) throw new BadRequestException("Product must be valid", nameof(product));
         productService.AddProduct(product);
+        TempData["Success"] = $"\"{product.Name}\" was created successfully.";
         return RedirectToAction("Products");
     }
 
@@ -79,23 +81,34 @@ public class AdminController : Controller
         return View(product);
     }
 
-    [HttpPut]
+    [HttpPost]
+    [ValidateAntiForgeryToken]
     public IActionResult EditProduct(Product product)
     {
+        if (!ModelState.IsValid)
+        {
+            return View(product);
+        }
+
         productService.ChangeProduct(product.Id, product);
+        TempData["Success"] = $"\"{product.Name}\" was updated successfully.";
         return RedirectToAction("Products");
     }
 
-    [HttpDelete]
+    [HttpPost]
+    [ValidateAntiForgeryToken]
     public IActionResult DeleteProduct(int id)
     {
         productService.RemoveProduct(id);
+        TempData["Success"] = "Product was deleted successfully.";
         return RedirectToAction("Products");
     }
 
     public async Task<IActionResult> EditUserRoles(string id)
     {
-        var user = userManager.FindByIdAsync(id).Result;
+        var user = await userManager.FindByIdAsync(id);
+        if (user == null) return NotFound();
+
         var roles = roleManager.Roles.Select(r => r.Name).ToList();
 
         var userRoles = await userManager.GetRolesAsync(user!);
@@ -112,6 +125,7 @@ public class AdminController : Controller
     }
 
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> EditUserRoles(EditUserRolesViewModel model)
     {
         var user = await userManager.FindByIdAsync(model.UserId) ?? throw new NotFoundException("User not found");

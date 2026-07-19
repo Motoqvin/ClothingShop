@@ -9,11 +9,13 @@ public class CartController : Controller
     private const string SessionKey = "Cart";
     private readonly UserManager<User> userManager;
     private readonly IOrdersService ordersService;
+    private readonly IEmailService emailService;
 
-    public CartController(UserManager<User> userManager, IOrdersService ordersService)
+    public CartController(UserManager<User> userManager, IOrdersService ordersService, IEmailService emailService)
     {
         this.ordersService = ordersService;
         this.userManager = userManager;
+        this.emailService = emailService;
     }
 
     public IActionResult Index()
@@ -23,6 +25,7 @@ public class CartController : Controller
     }
 
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public IActionResult Add(int id, string name, decimal price)
     {
         var cart = GetCart();
@@ -48,6 +51,7 @@ public class CartController : Controller
     }
 
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Checkout()
     {
         var cart = GetCart();
@@ -78,12 +82,18 @@ public class CartController : Controller
 
         ordersService.SendOrder(order);
 
+        if (!string.IsNullOrWhiteSpace(user.Email))
+        {
+            await emailService.SendOrderConfirmationEmailAsync(user.Email, order);
+        }
+
         HttpContext.Session.Remove(SessionKey);
         return View("OrderSuccess");
     }
 
 
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public IActionResult Remove(int id)
     {
         var cart = GetCart();

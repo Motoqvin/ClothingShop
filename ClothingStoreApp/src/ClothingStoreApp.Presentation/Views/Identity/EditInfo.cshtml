@@ -1,4 +1,4 @@
-@model ClothingStoreApp.Core.Models.User
+@model ClothingStoreApp.Presentation.ViewModels.EditInfoViewModel
 @{
     ViewData["Title"] = "Edit Info";
 }
@@ -10,7 +10,25 @@
                 <div class="card-body">
                     <h3 class="card-title mb-4 text-center">Edit Your Information</h3>
 
-                    <form asp-action="EditInfo" method="post">
+                    <form asp-action="EditInfo" method="post" enctype="multipart/form-data">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2 px-3 small mb-3"></div>
+
+                        <div class="mb-4 text-center">
+                            @if (!string.IsNullOrEmpty(Model.CurrentAvatar))
+                            {
+                                <img src="~/@Model.CurrentAvatar" id="avatarPreview" class="rounded-circle mb-2" style="width: 120px; height: 120px; object-fit: cover;" alt="Avatar" />
+                            }
+                            else
+                            {
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8oghbsuzggpkknQSSU-Ch_xep_9v3m6EeBQ&s" id="avatarPreview" class="rounded-circle mb-2" style="width: 120px; height: 120px; object-fit: cover;" alt="No Avatar" />
+                            }
+                            <div>
+                                <label asp-for="Avatar" class="form-label">Change Avatar</label>
+                                <input asp-for="Avatar" type="file" accept="image/*" class="form-control" onchange="previewAvatar(this)" />
+                                <span asp-validation-for="Avatar" class="text-danger small"></span>
+                            </div>
+                        </div>
+
                         <div class="mb-3">
                             <label asp-for="UserName" class="form-label">Username</label>
                             <input asp-for="UserName" class="form-control" />
@@ -45,4 +63,15 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        function previewAvatar(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById('avatarPreview').src = e.target.result;
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
 }
