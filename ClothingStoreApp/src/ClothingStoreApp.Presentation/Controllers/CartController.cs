@@ -52,6 +52,40 @@ public class CartController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
+    public IActionResult IncreaseQuantity(int id)
+    {
+        var cart = GetCart();
+
+        cart.First(x => x.ProductId == id).Quantity++;
+
+        SaveCart(cart);
+
+        return RedirectToAction(nameof(Index));
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public IActionResult DecreaseQuantity(int id)
+    {
+        var cart = GetCart();
+
+        var item = cart.FirstOrDefault(x => x.ProductId == id);
+
+        if (item != null)
+        {
+            item.Quantity--;
+
+            if (item.Quantity <= 0)
+                cart.Remove(item);
+
+            SaveCart(cart);
+        }
+
+        return RedirectToAction(nameof(Index));
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Checkout()
     {
         var cart = GetCart();

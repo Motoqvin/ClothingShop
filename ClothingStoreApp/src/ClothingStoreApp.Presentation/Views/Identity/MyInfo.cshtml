@@ -3,37 +3,139 @@
     ViewData["Title"] = "My Info";
 }
 
+<style>
+    .hero {
+        background: linear-gradient(135deg, #212529, #495057);
+        color: white;
+        border-radius: 22px;
+        padding: 3rem;
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .hero h1 {
+        font-weight: 700;
+        margin-bottom: .5rem;
+    }
+
+    .profile-card {
+        border: none;
+        border-radius: 22px;
+        box-shadow: 0 12px 35px rgba(0,0,0,.08);
+        overflow: visible;
+        margin-top: 2rem;
+    }
+
+    .profile-card .card-body {
+        padding: 2.5rem;
+    }
+
+    .profile-avatar {
+        width: 170px;
+        height: 170px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 5px solid white;
+        box-shadow: 0 10px 25px rgba(0,0,0,.15);
+        margin-top:-90px;
+        background: white;
+    }
+
+    .info-row {
+        padding: 14px 0;
+        border-bottom: 1px solid #ececec;
+    }
+
+    .info-row:last-child {
+        border-bottom: none;
+    }
+
+    .info-label {
+        color: #6c757d;
+        font-weight: 600;
+    }
+
+    .btn-modern {
+        border-radius: 14px;
+        padding: 12px;
+        font-weight: 600;
+    }
+
+    .form-control {
+        border-radius: 12px;
+        padding: 12px;
+    }
+
+    .form-control:focus {
+        box-shadow: 0 0 0 .2rem rgba(13,110,253,.15);
+    }
+
+    .upload-box {
+        border: 2px dashed #d5d5d5;
+        border-radius: 15px;
+        padding: 20px;
+        background: #fafafa;
+    }
+</style>
+
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-6">
-            <div class="card shadow border-0">
-                <div class="card-body justify-content-center text-center">
+            <div class="card profile-card">
+                <div class="text-center">
+
                     @if (!string.IsNullOrEmpty(Model.Avatar))
                     {
-                        <img src="~/@Model.Avatar" class="rounded-circle mb-3" style="width: 150px; height: 150px; object-fit: cover;" alt="Avatar" />
+                        <img src="~/@Model.Avatar"
+                            class="profile-avatar"
+                            alt="Avatar" />
                     }
                     else
                     {
-                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8oghbsuzggpkknQSSU-Ch_xep_9v3m6EeBQ&s" class="rounded-circle mb-3" alt="No Avatar" />
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8oghbsuzggpkknQSSU-Ch_xep_9v3m6EeBQ&s"
+                            class="profile-avatar"
+                            alt="Avatar" />
                     }
 
-                    <h3 class="card-title text-center mb-4">My Profile</h3>
-
-
-                    <dl class="row fs-5">
-                        <dt class="col-sm-4">Username</dt>
-                        <dd class="col-sm-8">@Model.UserName</dd>
-
-                        <dt class="col-sm-4">Email</dt>
-                        <dd class="col-sm-8">@Model.Email</dd>
-
-                        <dt class="col-sm-4">Phone</dt>
-                        <dd class="col-sm-8">@Model.PhoneNumber</dd>
-                    </dl>
-
-                    <div class="d-grid">
-                        <a asp-action="EditInfo" class="btn btn-outline-primary">Edit Info</a>
+                </div>
+                <div class="card-body justify-content-center text-center">
+                    <div class="hero">
+                    <h1>My Profile</h1>
+                    <p class="mb-0">
+                        View and manage your account information.
+                    </p>
                     </div>
+
+                    
+
+                    <div class="mt-5">
+
+                    <div class="info-row row">
+                        <div class="col-4 info-label">Username</div>
+                        <div class="col-8">@Model.UserName</div>
+                    </div>
+
+                    <div class="info-row row">
+                        <div class="col-4 info-label">Email</div>
+                        <div class="col-8">@Model.Email</div>
+                    </div>
+
+                    <div class="info-row row">
+                        <div class="col-4 info-label">Phone</div>
+                        <div class="col-8">@Model.PhoneNumber</div>
+                    </div>
+
+                    <div class="info-row row">
+                        <div class="col-4 info-label">Address</div>
+                        <div class="col-8">@Model.Address</div>
+                    </div>
+
+                </div>
+
+                    <a asp-action="EditInfo"
+                    class="btn btn-dark btn-modern mt-4 w-100">
+                        ✏️ Edit Profile
+                    </a>
                 </div>
             </div>
         </div>
