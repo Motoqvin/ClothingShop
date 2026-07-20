@@ -4,69 +4,204 @@
 @inject IProductsRepository productRepository
 
 @{
-  ViewData["Title"] = "Order Details";
-  var orderId = Model?.Id ?? 0;
-  var storeProducts = productRepository.GetAll(); // Fetch all available products
+    ViewData["Title"] = "Order Details";
+    var orderId = Model?.Id ?? 0;
+    var storeProducts = productRepository.GetAll();
 }
 
-@if (Model != null)
+<style>
+.hero{
+    background:linear-gradient(135deg,#212529,#495057);
+    color:white;
+    border-radius:22px;
+    padding:3rem;
+    text-align:center;
+    margin-bottom:2rem;
+}
+
+.section-card{
+    border:none;
+    border-radius:20px;
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+}
+
+.product-card{
+    border:none;
+    border-radius:18px;
+    box-shadow:0 8px 20px rgba(0,0,0,.07);
+    transition:.3s;
+}
+
+.product-card:hover{
+    transform:translateY(-3px);
+    box-shadow:0 15px 30px rgba(0,0,0,.12);
+}
+
+.summary{
+    position:sticky;
+    top:20px;
+}
+
+.btn-modern{
+    border-radius:12px;
+    font-weight:600;
+}
+</style>
+
+@if(Model != null)
 {
-  <div class="container mt-5">
-    <h2 class="mb-4">🧾 Order #@Model.Id</h2>
-    <div class="mb-3">
-      <strong>Date:</strong> @Model.Date.ToString("yyyy-MM-dd HH:mm")
+
+<div class="hero">
+
+    <h1>Order #@Model.Id</h1>
+
+    <p class="mb-0">
+        @Model.Date.ToString("dd MMM yyyy • HH:mm")
+    </p>
+
+</div>
+
+<div class="row">
+
+    <div class="col-lg-8">
+
+        <div class="card section-card mb-4">
+
+            <div class="card-body">
+
+                <h4 class="mb-4">
+                    <i class="bi bi-plus-circle"></i>
+                    Add Product
+                </h4>
+
+                <form id="ProductForm" class="row g-3">
+
+                    <div class="col-md-7">
+
+                        <select id="productSelect"
+                                class="form-select"
+                                required>
+
+                            <option selected disabled>
+
+                                Select Product
+
+                            </option>
+
+                            @foreach(var product in storeProducts)
+                            {
+                                <option value="@product.Id">
+
+                                    @product.Name — $@product.Price
+
+                                </option>
+                            }
+
+                        </select>
+
+                    </div>
+
+                    <div class="col-md-2">
+
+                        <input id="quantity"
+                               class="form-control"
+                               value="1"
+                               type="number"
+                               min="1">
+
+                    </div>
+
+                    <div class="col-md-3">
+
+                        <button class="btn btn-dark w-100 btn-modern">
+
+                            <i class="bi bi-cart-plus"></i>
+
+                            Add
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+        <h3 class="mb-3">
+
+            Products
+
+        </h3>
+
+        <div id="productList">
+
+        </div>
+
     </div>
-    <div class="mb-4">
-      <strong>Total Price:</strong> $@Model.TotalPrice.ToString("F2", CultureInfo.InvariantCulture)
+
+    <div class="col-lg-4">
+
+        <div class="card section-card summary">
+
+            <div class="card-body">
+
+                <h3>
+
+                    Order Summary
+
+                </h3>
+
+                <hr>
+
+                <div class="d-flex justify-content-between">
+
+                    <span>Order ID</span>
+
+                    <strong>#@Model.Id</strong>
+
+                </div>
+
+                <div class="d-flex justify-content-between mt-3">
+
+                    <span>Total</span>
+
+                    <strong id="orderTotal" class="text-primary fs-4">
+
+                        $@Model.TotalPrice.ToString("F2", CultureInfo.InvariantCulture)
+
+                    </strong>
+
+                </div>
+
+                <button id="saveOrderBtn"
+                        class="btn btn-dark w-100 mt-4 btn-modern">
+
+                    <i class="bi bi-check-circle"></i>
+
+                    Finish
+
+                </button>
+
+            </div>
+
+        </div>
+
     </div>
 
-    <h4 class="mb-3">Add Product from Store</h4>
-    <form id="ProductForm" class="row g-3" method="post">
-      <div class="col-md-6">
-        <select class="form-select" id="productSelect" required>
-          <option selected disabled value="">Choose a product...</option>
-          @foreach (var product in storeProducts)
-          {
-            <option value="@product.Id">
-              @product.Name — $@product.Price
-            </option>
-          }
-        </select>
-      </div>
-      <div class="col-md-3">
-        <input type="number" class="form-control" id="quantity" placeholder="Qty" min="1" value="1" required>
-      </div>
-      <div class="col-md-3">
-        <button type="submit" class="btn btn-success w-100">➕ Add</button>
-      </div>
-    </form>
+</div>
 
-    <hr class="my-4" />
-
-    <h4>🛒 Products in This Order</h4>
-    <table class="table table-bordered table-hover mt-3 align-middle">
-      <thead class="table-dark">
-        <tr>
-          <th>Product</th>
-          <th>Price ($)</th>
-          <th>Quantity</th>
-          <th>Total ($)</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody id="productList">
-      </tbody>
-    </table>
-    <button id="saveOrderBtn" class="btn btn-primary mt-4">
-      <i class="bi bi-save"></i> Save Order
-    </button>
-  </div>
 }
 else
 {
-  <div class="alert alert-danger mt-5 text-center">
-    Order not found!
-  </div>
+
+<div class="alert alert-danger text-center">
+
+    Order not found.
+
+</div>
+
 }
 
 @section Scripts {
@@ -102,27 +237,113 @@ else
     });
 
     async function loadProducts() {
-      const res = await fetch(`/Order/${orderId}/products`);
-      if (!res.ok) return alert("Failed to load products");
+      let total = 0;
 
-      const products = await res.json();
-      const productList = document.getElementById("productList");
-      productList.innerHTML = "";
+    const res = await fetch(`/Order/${orderId}/products`);
 
-      products.forEach(p => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-                      <td>${p.name}</td>
-                      <td>${p.price.toFixed(2)}</td>
-                      <td>${p.quantity}</td>
-                      <td>${(p.price * p.quantity).toFixed(2)}</td>
-                      <td>
-                          <button class="btn btn-danger btn-sm" onclick="deleteProduct(${p.id})">Remove</button>
-                      </td>
-                  `;
-        productList.appendChild(row);
-      });
+    if (!res.ok) {
+        alert("Failed to load products");
+        return;
     }
+
+    const products = await res.json();
+
+    const productList = document.getElementById("productList");
+    productList.innerHTML = "";
+
+    products.forEach(p => {
+        total += p.price * p.quantity;
+        productList.innerHTML += `
+            <div class="card product-card mb-3">
+
+                <div class="card-body">
+
+                    <div class="row align-items-center">
+
+                        <div class="col-md-5">
+
+                            <h5 class="fw-bold mb-1">
+                                ${p.name}
+                            </h5>
+
+                            <small class="text-muted">
+                                Product
+                            </small>
+
+                        </div>
+
+                        <div class="col-md-2 text-center">
+
+                            <span class="badge bg-primary fs-6">
+                                $${p.price.toFixed(2)}
+                            </span>
+
+                        </div>
+
+                        <div class="col-md-2 text-center">
+
+                            <span class="badge bg-secondary fs-6">
+                                x${p.quantity}
+                            </span>
+
+                        </div>
+
+                        <div class="col-md-2 text-center">
+
+                            <strong class="text-success fs-5">
+
+                                $${(p.price * p.quantity).toFixed(2)}
+
+                            </strong>
+
+                        </div>
+
+                        <div class="col-md-1 text-end">
+
+                            <button
+                                class="btn btn-outline-danger"
+                                onclick="deleteProduct(${p.id})">
+
+                                <i class="bi bi-trash"></i>
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        `;
+    });
+
+    document.getElementById("orderTotal").innerText =
+    "$" + total.toFixed(2);
+
+    if (products.length === 0) {
+
+        productList.innerHTML = `
+            <div class="card section-card">
+
+                <div class="card-body text-center py-5">
+
+                    <i class="bi bi-cart-x display-3 text-secondary"></i>
+
+                    <h4 class="mt-3">
+                        No products in this order
+                    </h4>
+
+                    <p class="text-muted">
+                        Use the form above to add products.
+                    </p>
+
+                </div>
+
+            </div>
+        `;
+    }
+}
 
     async function deleteProduct(productId) {
       if (!confirm("Remove this product from order?")) return;

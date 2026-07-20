@@ -138,6 +138,7 @@ public class IdentityController : Controller
             UserName = identityUser.UserName!,
             Email = identityUser.Email!,
             PhoneNumber = identityUser.PhoneNumber,
+            Address = identityUser.Address,
             CurrentAvatar = identityUser.Avatar
         };
 
@@ -161,6 +162,7 @@ public class IdentityController : Controller
         identityUser.UserName = updatedUser.UserName;
         identityUser.Email = updatedUser.Email;
         identityUser.PhoneNumber = updatedUser.PhoneNumber;
+        identityUser.Address = updatedUser.Address;
 
         if (updatedUser.Avatar != null && updatedUser.Avatar.Length > 0)
         {
@@ -199,6 +201,8 @@ public class IdentityController : Controller
             updatedUser.CurrentAvatar = identityUser.Avatar;
             return View(updatedUser);
         }
+
+        await signInManager.RefreshSignInAsync(identityUser);
 
         return RedirectToAction(nameof(MyInfo));
     }

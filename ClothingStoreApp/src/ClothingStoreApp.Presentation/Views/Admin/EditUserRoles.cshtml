@@ -1,18 +1,168 @@
 @using ClothingStoreApp.Presentation.ViewModels
 @model EditUserRolesViewModel
 
-<h2>Edit Roles for @Model.Email</h2>
-<form asp-action="EditUserRoles" method="post">
-    <input type="hidden" asp-for="UserId" />
-    @for (int i = 0; i < Model.AvailableRoles.Count; i++)
-    {
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox"
-                   name="SelectedRoles"
-                   value="@Model.AvailableRoles[i]"
-                   @(Model.SelectedRoles.Contains(Model.AvailableRoles[i]) ? "checked" : "") />
-            <label class="form-check-label">@Model.AvailableRoles[i]</label>
-        </div>
+@{
+    ViewData["Title"] = "Edit User Roles";
+}
+
+<style>
+    .hero {
+        background: linear-gradient(135deg,#212529,#495057);
+        color: white;
+        border-radius: 22px;
+        padding: 3rem;
+        text-align: center;
+        margin-bottom: 2rem;
     }
-    <button type="submit" class="btn btn-primary mt-3">Save Roles</button>
-</form>
+
+    .section-card {
+        border: none;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,.08);
+    }
+
+    .role-card {
+        border: 2px solid #e9ecef;
+        border-radius: 15px;
+        padding: 1rem 1.25rem;
+        transition: .25s;
+        cursor: pointer;
+    }
+
+    .role-card:hover {
+        border-color: #212529;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(0,0,0,.08);
+    }
+
+    .role-card input {
+        transform: scale(1.3);
+    }
+
+    .btn-modern {
+        border-radius: 12px;
+        font-weight: 600;
+        padding: .8rem 1.2rem;
+    }
+</style>
+
+<div class="hero">
+
+    <h1 class="fw-bold">
+        <i class="bi bi-shield-lock-fill"></i>
+        Edit User Roles
+    </h1>
+
+    <p class="mb-0 opacity-75">
+        @Model.Email
+    </p>
+
+</div>
+
+<div class="row justify-content-center">
+
+    <div class="col-lg-8">
+
+        <div class="card section-card">
+
+            <div class="card-body p-5">
+
+                <form asp-action="EditUserRoles" method="post">
+
+                    <input type="hidden" asp-for="UserId" />
+
+                    <h4 class="mb-4">
+
+                        <i class="bi bi-person-gear"></i>
+
+                        Available Roles
+
+                    </h4>
+
+                    <div class="row g-3">
+
+                        @for (int i = 0; i < Model.AvailableRoles.Count; i++)
+                        {
+                            var role = Model.AvailableRoles[i];
+
+                            <div class="col-md-6">
+
+                                <label class="role-card d-flex justify-content-between align-items-center">
+
+                                    <div>
+
+                                        <h5 class="mb-1">
+
+                                            @if(role == "Admin")
+                                            {
+                                                <span class="text-danger">
+                                                    <i class="bi bi-shield-fill-check"></i>
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-primary">
+                                                    <i class="bi bi-person-fill"></i>
+                                                </span>
+                                            }
+
+                                            @role
+
+                                        </h5>
+
+                                        <small class="text-muted">
+
+                                            @(role == "Admin"
+                                                ? "Full access to the system."
+                                                : "Regular customer account.")
+
+                                        </small>
+
+                                    </div>
+
+                                    <input type="checkbox"
+                                           class="form-check-input"
+                                           name="SelectedRoles"
+                                           value="@role"
+                                           @(Model.SelectedRoles.Contains(role) ? "checked" : "") />
+
+                                </label>
+
+                            </div>
+                        }
+
+                    </div>
+
+                    <hr class="my-5" />
+
+                    <div class="d-flex justify-content-between">
+
+                        <a asp-action="Users"
+                           class="btn btn-outline-secondary btn-modern">
+
+                            <i class="bi bi-arrow-left"></i>
+
+                            Back
+
+                        </a>
+
+                        <button type="submit"
+                                class="btn btn-dark btn-modern">
+
+                            <i class="bi bi-check-circle-fill"></i>
+
+                            Save Changes
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

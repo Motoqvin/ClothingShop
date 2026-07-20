@@ -1,69 +1,248 @@
 @model List<CartItem>
 
 @{
-    ViewData["Title"] = "Your Cart";
-    var totalPrice = Model.Sum(item => item.Price * item.Quantity);
+    ViewData["Title"] = "Shopping Cart";
+    var totalPrice = Model.Sum(x => x.Price * x.Quantity);
 }
 
-<div class="container">
-    <h1 class="mb-4 text-center">🛒 Your Shopping Cart</h1>
-
-    @if (!Model.Any())
-    {
-        <div class="alert alert-info text-center">
-            Your cart is empty. <a asp-controller="Home" asp-action="Index">Continue shopping</a>.
-        </div>
+<style>
+    .hero {
+        background: linear-gradient(135deg,#212529,#495057);
+        color: white;
+        border-radius: 22px;
+        padding: 3rem;
+        text-align: center;
+        margin-bottom: 2rem;
     }
-    else
-    {
-        <div class="card shadow-sm">
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-striped align-middle">
-                        <thead class="table-dark">
-                            <tr>
-                                <th scope="col">Product</th>
-                                <th scope="col">Quantity</th>
-                                <th scope="col">Price</th>
-                                <th scope="col">Total</th>
-                                <th scope="col">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        @foreach (var item in Model)
-                        {
-                            <tr>
-                                <td>@item.ProductName</td>
-                                <td>@item.Quantity</td>
-                                <td>$@item.Price</td>
-                                <td>$@(item.Quantity * item.Price)</td>
-                                <td>
-                                    <form asp-action="Remove" method="post" style="display:inline;">
-                                        <input type="hidden" name="id" value="@item.ProductId" />
-                                        <button type="submit" class="btn btn-sm btn-outline-danger">
-                                            <i class="bi bi-trash"></i> Remove
-                                        </button>
-                                    </form>
-                                </td>
-                            </tr>
-                        }
-                        </tbody>
-                        <tfoot class="table-light">
-                            <tr>
-                                <td colspan="3" class="text-end"><strong>Grand Total:</strong></td>
-                                <td><strong>$@totalPrice</strong></td>
-                                <td></td>
-                            </tr>
-                        </tfoot>
-                    </table>
+
+    .cart-item {
+        border: none;
+        border-radius: 18px;
+        box-shadow: 0 10px 30px rgba(0,0,0,.08);
+        margin-bottom: 20px;
+        transition: .3s;
+    }
+
+    .cart-item:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 35px rgba(0,0,0,.12);
+    }
+
+    .summary-card {
+        border: none;
+        border-radius: 18px;
+        box-shadow: 0 10px 30px rgba(0,0,0,.08);
+        position: sticky;
+        top: 20px;
+    }
+
+    .price {
+        color: #0d6efd;
+        font-size: 1.2rem;
+        font-weight: 700;
+    }
+
+    .qty-box {
+        background: #f8f9fa;
+        padding: 6px 15px;
+        border-radius: 10px;
+        display: inline-block;
+        font-weight: 600;
+    }
+
+    .btn-modern {
+        border-radius: 12px;
+        padding: 11px;
+        font-weight: 600;
+    }
+</style>
+
+<div class="hero">
+    <h1>Shopping Cart</h1>
+    <p class="mb-0">
+        Review your items before placing your order.
+    </p>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info text-center p-5 rounded-4">
+        <h4>Your cart is empty</h4>
+
+        <p class="mb-4">
+            Looks like you haven't added anything yet.
+        </p>
+
+        <a asp-controller="Home"
+           asp-action="Index"
+           class="btn btn-dark btn-modern">
+
+            Continue Shopping
+
+        </a>
+    </div>
+}
+else
+{
+
+<div class="row">
+
+    <div class="col-lg-8">
+
+        @foreach(var item in Model)
+        {
+            <div class="card cart-item">
+
+                <div class="card-body">
+
+                    <div class="row align-items-center">
+
+                        <div class="col-md-6">
+
+                            <h4 class="mb-2">
+                                @item.ProductName
+                            </h4>
+
+                            <div class="d-flex align-items-center gap-2">
+
+    <form asp-action="DecreaseQuantity" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="id" value="@item.ProductId" />
+
+        <button class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-dash"></i>
+        </button>
+    </form>
+
+    <span class="fw-bold fs-5 px-2">
+        @item.Quantity
+    </span>
+
+    <form asp-action="IncreaseQuantity" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="id" value="@item.ProductId" />
+
+        <button class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-plus"></i>
+        </button>
+    </form>
+
+</div>
+
+                        </div>
+
+                        <div class="col-md-3 text-center">
+
+                            <div class="price">
+                                $@item.Price
+                            </div>
+
+                            <small class="text-muted">
+                                each
+                            </small>
+
+                        </div>
+
+                        <div class="col-md-3 text-end">
+
+                            <h5 class="mb-3">
+                                $@(item.Price * item.Quantity)
+                            </h5>
+
+                            <form asp-action="Remove" method="post">
+
+                                <input type="hidden"
+                                       name="id"
+                                       value="@item.ProductId"/>
+
+                                <button class="btn btn-outline-danger btn-modern">
+
+                                    <i class="bi bi-trash"></i>
+
+                                    Remove
+
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+
                 </div>
 
-                <form asp-action="Checkout" method="post" class="text-end mt-4">
-                    <button type="submit" class="btn btn-success btn-lg">
-                        <i class="bi bi-bag-check-fill"></i> Place Order
-                    </button>
-                </form>
             </div>
+        }
+
+    </div>
+
+    <div class="col-lg-4">
+
+        <div class="card summary-card">
+
+            <div class="card-body">
+
+                <h3 class="mb-4">
+                    Order Summary
+                </h3>
+
+                <div class="d-flex justify-content-between mb-3">
+
+                    <span>Items</span>
+
+                    <strong>@Model.Sum(x=>x.Quantity)</strong>
+
+                </div>
+
+                <div class="d-flex justify-content-between mb-3">
+
+                    <span>Products</span>
+
+                    <strong>@Model.Count</strong>
+
+                </div>
+
+                <hr>
+
+                <div class="d-flex justify-content-between mb-4">
+
+                    <h4>Total</h4>
+
+                    <h4 class="text-primary">
+
+                        $@totalPrice
+
+                    </h4>
+
+                </div>
+
+                <form asp-action="Checkout"
+                      method="post">
+
+                    <button class="btn btn-dark btn-modern w-100">
+
+                        <i class="bi bi-bag-check-fill"></i>
+
+                        Place Order
+
+                    </button>
+
+                </form>
+
+                <a asp-controller="Home"
+                   asp-action="Index"
+                   class="btn btn-outline-secondary btn-modern w-100 mt-3">
+
+                    Continue Shopping
+
+                </a>
+
+            </div>
+
         </div>
-    }
+
+    </div>
+
 </div>
+
+}

@@ -3,85 +3,232 @@
     ViewData["Title"] = "Edit Product";
 }
 
-<div class="mb-4">
-    <a asp-action="Products" class="text-decoration-none text-muted small">
-        <i class="bi bi-arrow-left me-1"></i>Back to Products
-    </a>
-    <h2 class="mt-2 mb-0">✏️ Edit Product</h2>
+<style>
+.hero{
+    background:linear-gradient(135deg,#212529,#495057);
+    color:white;
+    border-radius:22px;
+    padding:3rem;
+    text-align:center;
+    margin-bottom:2rem;
+}
+
+.section-card{
+    border:none;
+    border-radius:22px;
+    box-shadow:0 12px 30px rgba(0,0,0,.08);
+}
+
+.preview-card{
+    border:none;
+    border-radius:20px;
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
+}
+
+.preview-image{
+    width:100%;
+    height:300px;
+    object-fit:cover;
+    border-radius:16px;
+}
+
+.form-control,
+.input-group-text{
+    border-radius:12px;
+}
+
+.btn-modern{
+    border-radius:12px;
+    font-weight:600;
+}
+</style>
+
+<div class="hero">
+
+    <h1>
+        <i class="bi bi-pencil-square"></i>
+        Edit Product
+    </h1>
+
+    <p class="mb-0 text-white-50">
+        Update product information and preview changes instantly.
+    </p>
+
 </div>
 
-<div class="row justify-content-center">
+<div class="row g-4">
+
     <div class="col-lg-8">
-        <div class="card border-0 shadow-sm rounded-4">
-            <div class="card-body p-4 p-md-5">
-                <div asp-validation-summary="ModelOnly" class="alert alert-danger d-none"></div>
-                <form asp-action="EditProduct" method="post" class="row g-3">
-                    <input type="hidden" asp-for="Id" />
-                    <div class="col-md-8">
-                        <label asp-for="Name" class="form-label fw-semibold"></label>
-                        <input asp-for="Name" class="form-control" />
-                        <span asp-validation-for="Name" class="text-danger small"></span>
+
+        <div class="card section-card">
+
+            <div class="card-body p-5">
+
+                <form asp-action="EditProduct" method="post">
+
+                    <input asp-for="Id" type="hidden"/>
+
+                    <div asp-validation-summary="ModelOnly"
+                         class="alert alert-danger"></div>
+
+                    <div class="mb-4">
+
+                        <label asp-for="Name"
+                               class="form-label fw-bold"></label>
+
+                        <input asp-for="Name"
+                               class="form-control form-control-lg"/>
+
+                        <span asp-validation-for="Name"
+                              class="text-danger"></span>
+
                     </div>
-                    <div class="col-md-4">
-                        <label asp-for="Price" class="form-label fw-semibold"></label>
-                        <div class="input-group">
-                            <span class="input-group-text">$</span>
-                            <input asp-for="Price" class="form-control" />
+
+                    <div class="row">
+
+                        <div class="col-md-6 mb-4">
+
+                            <label asp-for="Price"
+                                   class="form-label fw-bold"></label>
+
+                            <div class="input-group">
+
+                                <span class="input-group-text">$</span>
+
+                                <input asp-for="Price"
+                                       class="form-control"/>
+
+                            </div>
+
+                            <span asp-validation-for="Price"
+                                  class="text-danger"></span>
+
                         </div>
-                        <span asp-validation-for="Price" class="text-danger small"></span>
+
                     </div>
-                    <div class="col-12">
-                        <label asp-for="Description" class="form-label fw-semibold"></label>
-                        <textarea asp-for="Description" class="form-control" rows="3"></textarea>
-                        <span asp-validation-for="Description" class="text-danger small"></span>
+
+                    <div class="mb-4">
+
+                        <label asp-for="Description"
+                               class="form-label fw-bold"></label>
+
+                        <textarea asp-for="Description"
+                                  rows="5"
+                                  class="form-control"></textarea>
+
                     </div>
-                    <div class="col-12">
-                        <label asp-for="ImageUrl" class="form-label fw-semibold"></label>
-                        <input asp-for="ImageUrl" class="form-control" oninput="previewImage(this.value, 'editPreview')" />
-                        <span asp-validation-for="ImageUrl" class="text-danger small"></span>
-                        <div class="mt-3 border rounded-3 bg-light d-flex align-items-center justify-content-center overflow-hidden"
-                             style="height: 180px; width: 240px;">
-                            <img id="editPreview" src="@Model.ImageUrl" alt="Preview"
-                                 class="w-100 h-100 @(string.IsNullOrWhiteSpace(Model.ImageUrl) ? "d-none" : "")"
-                                 style="object-fit: cover;"
-                                 onerror="this.classList.add('d-none'); document.getElementById('editPreviewPlaceholder').classList.remove('d-none');" />
-                            <span id="editPreviewPlaceholder" class="text-muted small @(string.IsNullOrWhiteSpace(Model.ImageUrl) ? "" : "d-none")">
-                                <i class="bi bi-image fs-3 d-block text-center mb-1"></i>Image preview
-                            </span>
-                        </div>
+
+                    <div class="mb-4">
+
+                        <label asp-for="ImageUrl"
+                               class="form-label fw-bold"></label>
+
+                        <input asp-for="ImageUrl"
+                               class="form-control"
+                               oninput="previewImage(this.value)" />
+
                     </div>
-                    <div class="col-12 d-flex gap-2 mt-4">
-                        <button type="submit" class="btn btn-success rounded-3 px-4">
-                            <i class="bi bi-check-lg me-1"></i>Save Changes
+
+                    <div class="d-flex gap-3">
+
+                        <button class="btn btn-success btn-lg btn-modern">
+
+                            <i class="bi bi-check-circle"></i>
+
+                            Save Changes
+
                         </button>
-                        <a asp-action="Products" class="btn btn-outline-secondary rounded-3 px-4">Cancel</a>
+
+                        <a asp-action="Products"
+                           class="btn btn-outline-secondary btn-lg btn-modern">
+
+                            Cancel
+
+                        </a>
+
                     </div>
+
                 </form>
+
             </div>
+
         </div>
+
     </div>
+
+    <div class="col-lg-4">
+
+        <div class="card preview-card sticky-top"
+             style="top:20px;">
+
+            <div class="card-body">
+
+                <h4 class="mb-4">
+
+                    Live Preview
+
+                </h4>
+
+                <img id="previewImage"
+                     src="@Model.ImageUrl"
+                     class="preview-image"/>
+
+                <div class="mt-4">
+
+                    <h3 id="previewTitle">
+
+                        @Model.Name
+
+                    </h3>
+
+                    <h4 class="text-primary">
+
+                        $<span id="previewPrice">
+                            @Model.Price
+                        </span>
+
+                    </h4>
+
+                    <p id="previewDescription"
+                       class="text-muted">
+
+                        @Model.Description
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
 </div>
 
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-    <script>
-        function previewImage(url, imgId) {
-            const img = document.getElementById(imgId);
-            const placeholder = document.getElementById(imgId + 'Placeholder');
-            if (!url) {
-                img.classList.add('d-none');
-                placeholder.classList.remove('d-none');
-                return;
-            }
-            img.onload = function () {
-                img.classList.remove('d-none');
-                placeholder.classList.add('d-none');
-            };
-            img.onerror = function () {
-                img.classList.add('d-none');
-                placeholder.classList.remove('d-none');
-            };
-            img.src = url;
-        }
-    </script>
+@section Scripts{
+
+<partial name="_ValidationScriptsPartial"/>
+
+<script>
+
+function previewImage(url){
+    const img=document.getElementById("previewImage");
+    img.src=url;
+}
+
+document.querySelector("[name='Name']").addEventListener("input",e=>{
+    document.getElementById("previewTitle").innerText=e.target.value;
+});
+
+document.querySelector("[name='Price']").addEventListener("input",e=>{
+    document.getElementById("previewPrice").innerText=e.target.value;
+});
+
+document.querySelector("[name='Description']").addEventListener("input",e=>{
+    document.getElementById("previewDescription").innerText=e.target.value;
+});
+
+</script>
+
 }

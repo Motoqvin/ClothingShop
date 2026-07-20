@@ -5,35 +5,209 @@
     ViewData["Title"] = "Home";
 }
 
-<h1 class="mb-4">Products</h1>
+<style>
+    .hero {
+        background: linear-gradient(135deg, #212529, #495057);
+        color: white;
+        border-radius: 20px;
+        padding: 3rem;
+        margin-bottom: 2rem;
+    }
 
-<div class="row row-cols-1 row-cols-md-3 g-4">
-@foreach (var product in Model)
-{
-    <div class="col">
-        <div class="card h-100 shadow-sm">
-            <img src="@product.ImageUrl" class="card-img-top" alt="@product.Name" style="object-fit: cover; height: 200px;" />
-            <div class="card-body d-flex flex-column">
-                <h5 class="card-title">@product.Name</h5>
-                <p class="card-text flex-grow-1">@product.Description</p>
-                <p class="card-text fw-bold">$@product.Price</p>
-                <form asp-controller="Cart" asp-action="Add" method="post">
-                    <input type="hidden" name="id" value="@product.Id" />
-                    <input type="hidden" name="name" value="@product.Name" />
-                    <input type="hidden" name="price" value="@product.Price" />
-                    <button type="submit" class="btn btn-primary w-100 mt-auto">Add to Cart</button>
-                </form>
-            </div>
+    .hero h1 {
+        font-weight: 700;
+        font-size: 2.5rem;
+    }
+
+    .search-box {
+        background: white;
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0 10px 25px rgba(0,0,0,.08);
+        margin-top: -35px;
+        position: relative;
+        z-index: 5;
+    }
+
+    .product-card{
+    border:none;
+    border-radius:22px;
+    overflow:hidden;
+    transition:.35s;
+    background:white;
+    box-shadow:0 8px 20px rgba(0,0,0,.08);
+    }
+
+    .col{
+        display:flex;
+    }
+
+    .product-card:hover{
+        transform:translateY(-10px);
+        box-shadow:0 18px 45px rgba(0,0,0,.16);
+    }
+
+    .product-image {
+        height: 340px;
+        object-fit: cover;
+        transition: .4s;
+    }
+
+    .product-card:hover .product-image {
+        transform: scale(1.06);
+    }
+
+    .price {
+        font-size: 1.35rem;
+        font-weight: 700;
+        color: #0d6efd;
+    }
+    
+    .card-body{
+    padding:1.5rem;
+    }
+
+    .btn-cart {
+        border-radius: 12px;
+        font-weight: 600;
+    }
+
+    .search-input {
+        border-radius: 12px;
+        border: none;
+        background: #f5f5f5;
+        padding: 12px;
+    }
+
+    .search-input:focus {
+        background: white;
+        box-shadow: 0 0 0 .25rem rgba(13,110,253,.15);
+    }
+
+    .results-count {
+        color: gray;
+        margin-bottom: 20px;
+    }
+
+    .pagination .page-link{
+    border-radius:10px;
+    margin:0 4px;
+    border:none;
+    color:#212529;
+}
+
+.pagination .active .page-link{
+    background:#212529;
+    color:white;
+}
+
+.pagination .page-link:hover{
+    background:#343a40;
+    color:white;
+}
+</style>
+
+<div class="hero text-center">
+    <h1>Discover Your Style</h1>
+    <p class="mb-0 fs-5">
+        Browse our latest clothing collection.
+    </p>
+</div>
+
+<div class="search-box">
+    <form asp-action="Index" method="get">
+        <div class="input-group">
+            <span class="input-group-text bg-white border-0">
+                🔍
+            </span>
+
+            <input
+                type="text"
+                name="search"
+                class="form-control search-input"
+                placeholder="Search jackets, shirts, shoes..."
+                value="@Context.Request.Query["search"]" />
+
+            <button class="btn btn-dark px-4">
+                Search
+            </button>
+
+            @if (!string.IsNullOrWhiteSpace(Context.Request.Query["search"]))
+            {
+                <a asp-action="Index" class="btn btn-outline-secondary">
+                    Clear
+                </a>
+            }
         </div>
+    </form>
+</div>
+
+<p class="results-count mt-4">
+    Showing <strong>@Model.TotalItemCount</strong> products
+</p>
+
+@if (Model.Any())
+{
+    <div class="row row-cols-1 row-cols-md-5 row-cols-xl-3 g-2">
+        @foreach (var product in Model)
+        {
+            <div class="card product-card h-100">
+
+    <img src="@product.ImageUrl"
+         class="product-image"
+         alt="@product.Name">
+
+    <div class="card-body d-flex flex-column">
+
+        <h5 class="fw-bold">
+            @product.Name
+        </h5>
+
+        <p class="text-muted flex-grow-1">
+            @product.Description
+        </p>
+
+        <div class="price mb-3">
+            $@product.Price
+        </div>
+
+        <form asp-controller="Cart" asp-action="Add" method="post">
+
+            <input type="hidden" name="id" value="@product.Id"/>
+            <input type="hidden" name="name" value="@product.Name"/>
+            <input type="hidden" name="price" value="@product.Price"/>
+
+            <button class="btn btn-dark btn-cart w-100">
+                🛒 Add to Cart
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+        }
     </div>
 }
-</div>
+else
+{
+    <div class="alert alert-info text-center">
+        No products found.
+    </div>
+}
 
 <br />
 
 <div class="d-flex justify-content-center">
-    @Html.PagedListPager(Model, page => Url.Action("Index", 
-        new { page }), options: new PagedListRenderOptions{
+    @Html.PagedListPager(
+        Model,
+        page => Url.Action("Index", new
+        {
+            page,
+            search = Context.Request.Query["search"].ToString()
+        }),
+        new PagedListRenderOptions
+        {
             UlElementClasses = new[] { "pagination", "mt-4" },
             LiElementClasses = new[] { "page-item" },
             PageClasses = new[] { "page-link" },

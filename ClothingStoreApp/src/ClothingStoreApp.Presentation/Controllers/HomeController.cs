@@ -27,11 +27,12 @@ public class HomeController : Controller
     }
 
     [Authorize(Roles = "Admin, User")]
-    public IActionResult Index(int? page)
+    public IActionResult Index(string? search, int? page)
     {
-        var products = productsService.GetAllProducts();
         int pageSize = 6;
         int pageNum = page ?? 1;
+
+        var products = productsService.GetAllProducts(search);
 
         return View(products.ToPagedList(pageNum, pageSize));
     }

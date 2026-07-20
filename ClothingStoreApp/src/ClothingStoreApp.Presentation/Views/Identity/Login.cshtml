@@ -1,48 +1,237 @@
 @model ClothingStoreApp.Core.Models.LoginViewModel
+
 @{
     ViewData["Title"] = "Login";
 }
 
-<div class="container mt-5">
+<style>
+    .hero {
+        background: linear-gradient(135deg, #212529, #495057);
+        color: white;
+        border-radius: 22px;
+        padding: 3rem;
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .hero h1 {
+        font-weight: 700;
+    }
+
+    .login-card {
+        border: none;
+        border-radius: 22px;
+        overflow: hidden;
+        box-shadow: 0 15px 40px rgba(0,0,0,.08);
+    }
+
+    .login-card .card-body {
+        padding: 2.5rem;
+    }
+
+    .login-icon {
+        width: 110px;
+        height: 110px;
+        margin: 0 auto 20px;
+        border-radius: 50%;
+        background: #212529;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.7rem;
+        box-shadow: 0 10px 25px rgba(0,0,0,.15);
+    }
+
+    .form-control {
+        border-radius: 12px;
+        padding: 12px;
+    }
+
+    .input-group-text {
+        border-radius: 12px 0 0 12px;
+        background: white;
+        border-right: none;
+    }
+
+    .input-group .form-control {
+        border-left: none;
+    }
+
+    .btn-login {
+        border-radius: 14px;
+        padding: 12px;
+        font-weight: 600;
+    }
+
+    .card-title {
+        font-weight: 700;
+    }
+
+    .form-check-input:checked {
+        background-color: #212529;
+        border-color: #212529;
+    }
+</style>
+
+<div class="hero">
+    <h1>Welcome Back</h1>
+    <p class="mb-0">
+        Sign in to continue shopping your favorite styles.
+    </p>
+</div>
+
+<div class="container">
+
     <div class="row justify-content-center">
-        <div class="col-md-6 col-lg-5">
-            <div class="card shadow-lg border-0 rounded-3">
-                <div class="card-body p-4">
-                    <h2 class="card-title text-center mb-4">Login</h2>
+
+        <div class="col-lg-5">
+
+            <div class="card login-card">
+
+                <div class="card-body">
+
+                    <div class="login-icon">
+                        <i class="bi bi-person-fill"></i>
+                    </div>
+
+                    <h3 class="card-title text-center mb-4">
+                        Login
+                    </h3>
 
                     <form asp-action="Login" method="post" novalidate>
-                        <input type="hidden" name="ReturnUrl" value="@ViewData["returnUrl"]" />
-                        <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2 px-3 small mb-3"></div>
 
-                        <div class="form-group mb-3">
+                        <input type="hidden"
+                               name="ReturnUrl"
+                               value="@ViewData["returnUrl"]" />
+
+                        <div asp-validation-summary="ModelOnly"
+                             class="alert alert-danger"></div>
+
+                        <div class="mb-3">
+
                             <label asp-for="Email" class="form-label"></label>
-                            <input asp-for="Email" class="form-control" />
-                            <span asp-validation-for="Email" class="text-danger small"></span>
+
+                            <div class="input-group">
+
+                                <span class="input-group-text">
+                                    <i class="bi bi-envelope"></i>
+                                </span>
+
+                                <input asp-for="Email"
+                                       class="form-control">
+
+                            </div>
+
+                            <span asp-validation-for="Email"
+                                  class="text-danger small"></span>
+
                         </div>
 
-                        <div class="form-group mb-3">
+                        <div class="mb-3">
+
                             <label asp-for="Password" class="form-label"></label>
-                            <input asp-for="Password" class="form-control" type="password" />
-                            <span asp-validation-for="Password" class="text-danger small"></span>
+
+                            <div class="input-group">
+
+                                <span class="input-group-text">
+                                    <i class="bi bi-lock"></i>
+                                </span>
+
+                                <input asp-for="Password"
+                                       id="password"
+                                       class="form-control"
+                                       type="password">
+
+                                <button class="btn btn-outline-secondary"
+                                        type="button"
+                                        onclick="togglePassword()">
+
+                                    <i id="eye"
+                                       class="bi bi-eye"></i>
+
+                                </button>
+
+                            </div>
+
+                            <span asp-validation-for="Password"
+                                  class="text-danger small"></span>
+
                         </div>
 
-                        <div class="form-group form-check mb-4">
-                            <input asp-for="RememberMe" class="form-check-input" />
-                            <label asp-for="RememberMe" class="form-check-label"></label>
+                        <div class="form-check mb-4">
+
+                            <input asp-for="RememberMe"
+                                   class="form-check-input">
+
+                            <label asp-for="RememberMe"
+                                   class="form-check-label">
+                            </label>
+
                         </div>
 
-                        <button type="submit" class="btn btn-primary w-100">Login</button>
+                        <button type="submit"
+                                class="btn btn-dark btn-login w-100">
+
+                            <i class="bi bi-box-arrow-in-right"></i>
+                            Login
+
+                        </button>
+
                     </form>
 
-                    <div class="text-center mt-3">
-                        <a asp-action="Registration" class="text-muted">Don't have an account? Sign up</a>
+                    <hr class="my-4">
+
+                    <div class="text-center">
+
+                        <p class="text-muted mb-2">
+                            Don't have an account?
+                        </p>
+
+                        <a asp-action="Registration"
+                           class="btn btn-outline-dark w-100 btn-login">
+
+                            Create Account
+
+                        </a>
+
                     </div>
+
                 </div>
+
             </div>
+
         </div>
+
     </div>
+
 </div>
 
 @section Scripts {
-    <partial name="_ValidationScriptsPartial" />
+
+    <partial name="_ValidationScriptsPartial"/>
+
+    <script>
+
+        function togglePassword(){
+
+            const input = document.getElementById("password");
+            const eye = document.getElementById("eye");
+
+            if(input.type === "password"){
+
+                input.type = "text";
+                eye.className = "bi bi-eye-slash";
+
+            }else{
+
+                input.type = "password";
+                eye.className = "bi bi-eye";
+
+            }
+
+        }
+
+    </script>
+
 }

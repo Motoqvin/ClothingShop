@@ -1,26 +1,209 @@
 @model Order
 
-<h2>Order #@Model.Id</h2>
-<p><strong>Date:</strong> @Model.Date</p>
-<p><strong>User:</strong> @Model.UserId</p>
-<p><strong>Total:</strong> $@Model.TotalPrice</p>
+@{
+    ViewData["Title"] = "Order Details";
+}
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Product</th>
-            <th>Price</th>
-            <th>Quantity</th>
-        </tr>
-    </thead>
-    <tbody>
+<style>
+    .hero {
+        background: linear-gradient(135deg,#212529,#495057);
+        color: white;
+        border-radius: 22px;
+        padding: 3rem;
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .section-card {
+        border: none;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,.08);
+    }
+
+    .product-card {
+        border: none;
+        border-radius: 18px;
+        box-shadow: 0 8px 20px rgba(0,0,0,.06);
+        transition: .25s;
+    }
+
+    .product-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 14px 28px rgba(0,0,0,.12);
+    }
+
+    .summary-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+    }
+
+    .price {
+        color: #198754;
+        font-size: 1.2rem;
+        font-weight: 700;
+    }
+
+    .qty-badge {
+        background: #6c757d;
+        color: white;
+        border-radius: 30px;
+        padding: .45rem .9rem;
+        font-weight: 600;
+    }
+
+    .btn-modern {
+        border-radius: 12px;
+        font-weight: 600;
+    }
+</style>
+
+<div class="hero">
+
+    <h1 class="fw-bold">
+        <i class="bi bi-receipt-cutoff"></i>
+        Order #@Model.Id
+    </h1>
+
+    <p class="mb-0 opacity-75">
+        View complete order information
+    </p>
+
+</div>
+
+<div class="row">
+
+    <div class="col-lg-4">
+
+        <div class="card section-card sticky-top" style="top:20px;">
+
+            <div class="card-body">
+
+                <h3 class="mb-4">
+                    <i class="bi bi-info-circle"></i>
+                    Summary
+                </h3>
+
+                <div class="summary-item">
+                    <span>Order ID</span>
+                    <strong>#@Model.Id</strong>
+                </div>
+
+                <div class="summary-item">
+                    <span>Customer</span>
+                    <strong>@Model.UserId</strong>
+                </div>
+
+                <div class="summary-item">
+                    <span>Date</span>
+                    <strong>@Model.Date.ToString("dd MMM yyyy")</strong>
+                </div>
+
+                <div class="summary-item">
+                    <span>Time</span>
+                    <strong>@Model.Date.ToString("HH:mm")</strong>
+                </div>
+
+                <hr>
+
+                <div class="summary-item">
+
+                    <span class="fs-5">Total</span>
+
+                    <span class="price">
+
+                        $@Model.TotalPrice.ToString("N2")
+
+                    </span>
+
+                </div>
+
+                <a asp-action="Orders"
+                   class="btn btn-dark w-100 btn-modern mt-3">
+
+                    <i class="bi bi-arrow-left"></i>
+
+                    Back to Orders
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-8">
+
+        <h3 class="mb-4">
+
+            <i class="bi bi-box-seam"></i>
+
+            Ordered Products
+
+        </h3>
+
         @foreach (var op in Model.OrdersProducts)
         {
-            <tr>
-                <td>@op.Product.Name</td>
-                <td>$@op.Product.Price</td>
-                <td>@op.Quantity</td>
-            </tr>
+            <div class="card product-card mb-3">
+
+                <div class="card-body">
+
+                    <div class="row align-items-center">
+
+                        <div class="col-md-6">
+
+                            <h5 class="fw-bold mb-1">
+
+                                @op.Product.Name
+
+                            </h5>
+
+                            <small class="text-muted">
+
+                                Product
+
+                            </small>
+
+                        </div>
+
+                        <div class="col-md-2 text-center">
+
+                            <span class="badge bg-primary fs-6">
+
+                                $@op.Product.Price.ToString("N2")
+
+                            </span>
+
+                        </div>
+
+                        <div class="col-md-2 text-center">
+
+                            <span class="qty-badge">
+
+                                x @op.Quantity
+
+                            </span>
+
+                        </div>
+
+                        <div class="col-md-2 text-end">
+
+                            <span class="price">
+
+                                $@((op.Product.Price * op.Quantity).ToString("N2"))
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
         }
-    </tbody>
-</table>
+
+    </div>
+
+</div>

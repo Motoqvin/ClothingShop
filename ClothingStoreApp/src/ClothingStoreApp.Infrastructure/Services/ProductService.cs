@@ -55,9 +55,19 @@ public class ProductService : IProductService
         }
     }
 
-    public List<Product> GetAllProducts()
+    public List<Product> GetAllProducts(string? search = null)
     {
         var products = productsRepository.GetAll() ?? throw new NotFoundException(message: "Products not found!");
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            search = search.Trim().ToLower();
+
+            products = products.Where(p =>
+                p.Name!.ToLower().Contains(search) ||
+                p.Description!.ToLower().Contains(search)).ToList();
+        }
+
         return products;
     }
 

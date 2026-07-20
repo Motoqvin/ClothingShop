@@ -8,5 +8,5 @@ public interface IProductService
     void ChangeProduct(int id, Product product);
     void RemoveProduct(int id);
     Product GetProductById(int id);
-    List<Product> GetAllProducts();
+    List<Product> GetAllProducts(string? search = null);
 }
