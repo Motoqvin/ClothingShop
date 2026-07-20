@@ -50,7 +50,7 @@ else
                             <a asp-action="EditProduct" asp-route-id="@product.Id" class="btn btn-sm btn-outline-warning flex-fill rounded-3">
                                 <i class="bi bi-pencil-square me-1"></i>Edit
                             </a>
-                            <form action="/Admin/DeleteProduct/@product.Id" method="post" class="flex-fill"
+                            <form asp-action="DeleteProduct" asp-controller="Admin" asp-route-id="@product.Id" method="post" class="flex-fill"
                                   onsubmit="return confirm('Delete &quot;@product.Name&quot;? This cannot be undone.');">
                                 <button class="btn btn-sm btn-outline-danger w-100 rounded-3" type="submit">
                                     <i class="bi bi-trash3 me-1"></i>Delete

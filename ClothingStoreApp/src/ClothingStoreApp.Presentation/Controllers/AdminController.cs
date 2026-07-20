@@ -65,9 +65,15 @@ public class AdminController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult CreateProduct(Product product)
+    public IActionResult CreateProduct(Product product, IFormFile? ImageFile)
     {
         if (!ModelState.IsValid) throw new BadRequestException("Product must be valid", nameof(product));
+
+        if (ImageFile != null && ImageFile.Length > 0)
+        {
+            product.ImageUrl = SaveProductImage(ImageFile);
+        }
+
         productService.AddProduct(product);
         TempData["Success"] = $"\"{product.Name}\" was created successfully.";
         return RedirectToAction("Products");
@@ -83,11 +89,27 @@ public class AdminController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult EditProduct(Product product)
+    public IActionResult EditProduct(Product product, IFormFile? ImageFile)
     {
         if (!ModelState.IsValid)
         {
             return View(product);
+        }
+
+        var existingProduct = productService.GetProductById(product.Id);
+
+        if (ImageFile != null && ImageFile.Length > 0)
+        {
+            product.ImageUrl = SaveProductImage(ImageFile);
+
+            if (!string.IsNullOrEmpty(existingProduct?.ImageUrl))
+            {
+                DeleteProductImage(existingProduct.ImageUrl);
+            }
+        }
+        else
+        {
+            product.ImageUrl = existingProduct?.ImageUrl;
         }
 
         productService.ChangeProduct(product.Id, product);
@@ -95,13 +117,38 @@ public class AdminController : Controller
         return RedirectToAction("Products");
     }
 
+    private static string SaveProductImage(IFormFile imageFile)
+    {
+        var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "products");
+        Directory.CreateDirectory(uploadsFolder);
+
+        var fileName = Guid.NewGuid() + Path.GetExtension(imageFile.FileName);
+        var filePath = Path.Combine(uploadsFolder, fileName);
+
+        using (var stream = new FileStream(filePath, FileMode.Create))
+        {
+            imageFile.CopyTo(stream);
+        }
+
+        return $"/uploads/products/{fileName}";
+    }
+
+    private static void DeleteProductImage(string imageUrl)
+    {
+        var relativePath = imageUrl.TrimStart('/', '\\').Replace('/', Path.DirectorySeparatorChar);
+        var oldFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", relativePath);
+        if (System.IO.File.Exists(oldFilePath))
+        {
+            System.IO.File.Delete(oldFilePath);
+        }
+    }
+
     [HttpPost]
-    [ValidateAntiForgeryToken]
     public IActionResult DeleteProduct(int id)
     {
         productService.RemoveProduct(id);
         TempData["Success"] = "Product was deleted successfully.";
-        return RedirectToAction("Products");
+        return RedirectToAction(nameof(Products));
     }
 
     public async Task<IActionResult> EditUserRoles(string id)

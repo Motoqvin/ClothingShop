@@ -56,6 +56,7 @@ public class ProductController : Controller
         }
     }
 
+    [Authorize(Roles = "Admin, User")]
     [HttpGet]
     [Route("{id}")]
     public ActionResult<Product> GetProductById(int id){

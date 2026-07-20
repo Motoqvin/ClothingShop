@@ -73,7 +73,7 @@ textarea{
 
             <div class="card-body p-5">
 
-                <form asp-action="CreateProduct" method="post">
+                <form asp-action="CreateProduct" method="post" enctype="multipart/form-data">
 
                     <div asp-validation-summary="ModelOnly"
                          class="alert alert-danger"></div>
@@ -126,14 +126,17 @@ textarea{
 
                     <div class="mb-4">
 
-                        <label asp-for="ImageUrl"
-                               class="form-label fw-semibold"></label>
+                        <label for="productImage"
+                               class="form-label fw-semibold">Product Photo</label>
 
-                        <input asp-for="ImageUrl"
+                        <input type="file"
+                               name="ImageFile"
                                id="productImage"
                                class="form-control"
-                               placeholder="https://..."
-                               oninput="previewImage()">
+                               accept="image/*"
+                               onchange="previewImage()">
+
+                        <div class="form-text">Upload a JPG or PNG image from your device.</div>
 
                     </div>
 
@@ -245,9 +248,18 @@ priceInput.value||"0.00";
 
 function previewImage(){
 
-document.getElementById("previewImage").src=
-imageInput.value||
-"https://via.placeholder.com/500x500?text=Product";
+const file = imageInput.files && imageInput.files[0];
+
+if (file) {
+    const reader = new FileReader();
+    reader.onload = function(e){
+        document.getElementById("previewImage").src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+} else {
+    document.getElementById("previewImage").src =
+    "https://via.placeholder.com/500x500?text=Product";
+}
 
 }
 

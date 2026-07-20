@@ -171,6 +171,11 @@
             $@product.Price
         </div>
 
+        <a asp-controller="Product" asp-action="GetProductById" asp-route-id="@product.Id"
+           class="btn btn-outline-dark btn-cart w-100 mb-2">
+            View Details
+        </a>
+
         <form asp-controller="Cart" asp-action="Add" method="post">
 
             <input type="hidden" name="id" value="@product.Id"/>

@@ -20,7 +20,7 @@ public class ProductsEFRepository : IProductsRepository
 
     public void Delete(int id)
     {
-        _ = dbContext.Products.Remove(new Product { Id = id });
+        _ = dbContext.Products.Remove(GetById(id) ?? throw new NotFoundException(message: "Product not found!"));
         dbContext.SaveChanges();
     }
 

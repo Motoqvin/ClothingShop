@@ -64,7 +64,7 @@
 
             <div class="card-body p-5">
 
-                <form asp-action="EditProduct" method="post">
+                <form asp-action="EditProduct" method="post" enctype="multipart/form-data">
 
                     <input asp-for="Id" type="hidden"/>
 
@@ -120,12 +120,17 @@
 
                     <div class="mb-4">
 
-                        <label asp-for="ImageUrl"
-                               class="form-label fw-bold"></label>
+                        <label for="productImage"
+                               class="form-label fw-bold">Product Photo</label>
 
-                        <input asp-for="ImageUrl"
+                        <input type="file"
+                               name="ImageFile"
+                               id="productImage"
                                class="form-control"
-                               oninput="previewImage(this.value)" />
+                               accept="image/*"
+                               onchange="previewSelectedFile(this)" />
+
+                        <div class="form-text">Leave empty to keep the current photo.</div>
 
                     </div>
 
@@ -212,9 +217,15 @@
 
 <script>
 
-function previewImage(url){
-    const img=document.getElementById("previewImage");
-    img.src=url;
+function previewSelectedFile(input){
+    const file = input.files && input.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e){
+        document.getElementById("previewImage").src = e.target.result;
+    };
+    reader.readAsDataURL(file);
 }
 
 document.querySelector("[name='Name']").addEventListener("input",e=>{

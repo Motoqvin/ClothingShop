@@ -26,14 +26,15 @@ public class CartController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Add(int id, string name, decimal price)
+    public IActionResult Add(int id, string name, decimal price, int quantity = 1)
     {
         var cart = GetCart();
 
-        var item = cart.FirstOrDefault(p => p.ProductId == id);
+        var item = cart.FirstOrDefault(x => x.ProductId == id);
+
         if (item != null)
         {
-            item.Quantity++;
+            item.Quantity += quantity;
         }
         else
         {
@@ -42,12 +43,13 @@ public class CartController : Controller
                 ProductId = id,
                 ProductName = name,
                 Price = price,
-                Quantity = 1
+                Quantity = quantity
             });
         }
 
         SaveCart(cart);
-        return RedirectToAction("Index", "Home");
+
+        return RedirectToAction("Index");
     }
 
     [HttpPost]
