@@ -1,7 +1,8 @@
-namespace ClothingStoreApp.Core.Enums;
-
-public enum Roles
+namespace ClothingStoreApp.Core.Enums
 {
-    Admin,
-    User
+    public enum Roles
+    {
+        Admin,
+        User
+    }
 }

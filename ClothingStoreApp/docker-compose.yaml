@@ -1,0 +1,44 @@
+services:
+  db:
+    image: postgres:17
+    container_name: clothingstoreapp-db
+    environment:
+      POSTGRES_DB: StoreDB
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Admin123!
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d StoreDB"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: clothingstoreapp-web
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      ConnectionStrings__IdentityDb: "Host=db;Port=5432;Database=StoreDB;Username=postgres;Password=Admin123!"
+      Smtp__Host: "smtp.gmail.com"
+      Smtp__Port: "587"
+      Smtp__EnableSsl: "true"
+      Smtp__Username: "elvin.mahmudlu18@gmail.com"
+      Smtp__Password: "etyo wkhq fbza hbnl"
+      Smtp__FromEmail: "elvin.mahmudlu18@gmail.com"
+      Smtp__FromName: "Clothing Store"
+    ports:
+      - "8080:8080"
+    volumes:
+      - avatar-uploads:/app/wwwroot/uploads/avatars
+    restart: unless-stopped
+
+volumes:
+  db-data:
+  avatar-uploads:

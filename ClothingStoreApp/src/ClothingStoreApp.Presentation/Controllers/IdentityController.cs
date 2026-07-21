@@ -91,7 +91,7 @@ public class IdentityController : Controller
             System.Console.WriteLine(result);
             if (result.Succeeded)
             {
-                await this.userManager.AddToRoleAsync(user, nameof(Roles.User));
+                await this.userManager.AddToRoleAsync(user, "User");
                 return RedirectToAction(nameof(Login));
             }
             else

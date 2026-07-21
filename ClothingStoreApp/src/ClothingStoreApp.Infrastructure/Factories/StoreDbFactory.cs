@@ -9,7 +9,7 @@ public class StoreDbContextFactory : IDesignTimeDbContextFactory<StoreDbContext>
     StoreDbContext IDesignTimeDbContextFactory<StoreDbContext>.CreateDbContext(string[] args)
     {
         var optionsBuilder = new DbContextOptionsBuilder<StoreDbContext>();
-        optionsBuilder.UseSqlServer("Server=localhost;Database=StoreDB;Integrated Security=True;TrustServerCertificate=True;");
+        optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=StoreDB;Username=postgres;Password=Admin123!");
 
         return new StoreDbContext(optionsBuilder.Options);
     }

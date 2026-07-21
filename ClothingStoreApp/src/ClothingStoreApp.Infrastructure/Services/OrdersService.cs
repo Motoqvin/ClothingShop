@@ -111,7 +111,7 @@ public class OrdersService : IOrdersService
     public List<Order> GetAllOrders()
     {
         var orders = ordersRepository.GetAll();
-        if (orders == null || orders.Count == 0)
+        if (orders == null)
         {
             throw new NotFoundException(message: "No orders found!");
         }

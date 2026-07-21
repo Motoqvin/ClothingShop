@@ -28,6 +28,10 @@ public class SmtpEmailService : IEmailService
             return;
         }
 
+        Console.WriteLine($"Host: {settings.Host}");
+        Console.WriteLine($"Port: {settings.Port}");
+        Console.WriteLine($"User: {settings.Username}");
+        Console.WriteLine($"SSL: {settings.EnableSsl}");
         var body = BuildBody(order);
 
         using var message = new MailMessage

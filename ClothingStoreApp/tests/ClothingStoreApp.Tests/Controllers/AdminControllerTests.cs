@@ -2,8 +2,10 @@ using ClothingStoreApp.Core.Models;
 using ClothingStoreApp.Core.Services;
 using ClothingStoreApp.Presentation.Controllers;
 using ClothingStoreApp.Presentation.ViewModels;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Moq;
 
 namespace ClothingStoreApp.Tests.Controllers;
@@ -37,7 +39,7 @@ public class AdminControllerTests
     {
         var controller = GetController(out var productService, out _, out _, out _);
         var products = new List<Product> { new Product { Id = 1 } };
-        productService.Setup(s => s.GetAllProducts()).Returns(products);
+        productService.Setup(s => s.GetAllProducts("")).Returns(products);
 
         var result = controller.Products();
 
@@ -75,9 +77,17 @@ public class AdminControllerTests
     public void CreateProduct_Post_RedirectsToProducts()
     {
         var controller = GetController(out var productService, out _, out _, out _);
+        controller.ControllerContext = new ControllerContext
+        {
+            HttpContext = new DefaultHttpContext()
+        };
+
+        controller.TempData = new TempDataDictionary(
+            controller.HttpContext,
+            Mock.Of<ITempDataProvider>());
         var product = new Product { Id = 1 };
 
-        var result = controller.CreateProduct(product);
+        var result = controller.CreateProduct(product, null);
 
         productService.Verify(s => s.AddProduct(product), Times.Once);
         var redirect = Assert.IsType<RedirectToActionResult>(result);
@@ -88,6 +98,9 @@ public class AdminControllerTests
     public void EditProduct_Get_ReturnsProduct()
     {
         var controller = GetController(out var productService, out _, out _, out _);
+        controller.TempData = new TempDataDictionary(
+            controller.HttpContext,
+            Mock.Of<ITempDataProvider>());
         var product = new Product { Id = 1 };
         productService.Setup(s => s.GetProductById(1)).Returns(product);
 
@@ -114,7 +127,7 @@ public class AdminControllerTests
         var controller = GetController(out var productService, out _, out _, out _);
         var product = new Product { Id = 1 };
 
-        var result = controller.EditProduct(product);
+        var result = controller.EditProduct(product, null);
 
         productService.Verify(s => s.ChangeProduct(product.Id, product), Times.Once);
         var redirect = Assert.IsType<RedirectToActionResult>(result);
@@ -190,7 +203,7 @@ public class AdminControllerTests
         var orders = new List<Order> { new Order { TotalPrice = 10 }, new Order { TotalPrice = 20 } };
         var users = new List<User> { new User(), new User(), new User() }.AsQueryable();
 
-        productService.Setup(s => s.GetAllProducts()).Returns(products);
+        productService.Setup(s => s.GetAllProducts("")).Returns(products);
         ordersService.Setup(s => s.GetAllOrders()).Returns(orders);
         userManager.SetupGet(um => um.Users).Returns(users);
 

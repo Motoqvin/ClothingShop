@@ -6,6 +6,7 @@ using ClothingStoreApp.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Npgsql.EntityFrameworkCore.PostgreSQL;
 using ClothingStoreApp.Core.Models;
 using ClothingStoreApp.Infrastructure.Data;
 using ClothingStoreApp.Core.Settings;
@@ -18,11 +19,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddTransient<IProductsRepository, ProductsEFRepository>();
 
 builder.Services.AddTransient<IOrdersRepository, OrdersEFRepository>();
-
+Console.WriteLine(builder.Configuration.GetConnectionString("IdentityDb"));
 builder.Services.AddDbContext<StoreDbContext>(options =>
 {
     var connectionString = builder.Configuration.GetConnectionString("IdentityDb");
-    options.UseSqlServer(connectionString);
+    options.UseNpgsql(connectionString);
 });
 
 builder.Services.AddIdentity<User, IdentityRole>()
@@ -98,8 +99,6 @@ var app = builder.Build();
 var serviceScope = app.Services.CreateScope();
 var roleManager = serviceScope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
-await roleManager.CreateAsync(new IdentityRole {Name = "User"});
-
 static async Task SeedAdmin(IServiceProvider services)
 {
     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
@@ -107,6 +106,7 @@ static async Task SeedAdmin(IServiceProvider services)
 
     if (!await roleManager.RoleExistsAsync("Admin"))
     {
+        await roleManager.CreateAsync(new IdentityRole {Name = "User"});
         await roleManager.CreateAsync(new IdentityRole("Admin"));
     }
 
@@ -128,8 +128,8 @@ static async Task SeedAdmin(IServiceProvider services)
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<StoreDbContext>();
+    await dbContext.Database.MigrateAsync();
     await SeedAdmin(scope.ServiceProvider);
-    dbContext.Database.Migrate();
 }
 
 app.UseHttpsRedirection();

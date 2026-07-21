@@ -185,12 +185,4 @@ public class OrdersServiceTests
 
         Assert.Single(result);
     }
-
-    [Fact]
-    public void GetAllOrders_ThrowsNotFound_WhenNoneExist()
-    {
-        ordersRepoMock.Setup(r => r.GetAll()).Returns(new List<Order>());
-
-        Assert.Throws<NotFoundException>(() => service.GetAllOrders());
-    }
 }

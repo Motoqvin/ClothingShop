@@ -3,9 +3,11 @@ using ClothingStoreApp.Core.Dtos;
 using ClothingStoreApp.Core.Models;
 using ClothingStoreApp.Infrastructure.Data;
 using ClothingStoreApp.Presentation.Controllers;
+using ClothingStoreApp.Presentation.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 
@@ -15,7 +17,8 @@ public class IdentityControllerTests
     private IdentityController GetController(
         out Mock<UserManager<User>> userManagerMock,
         out Mock<SignInManager<User>> signInManagerMock,
-        out Mock<RoleManager<IdentityRole>> roleManagerMock)
+        out Mock<RoleManager<IdentityRole>> roleManagerMock,
+        out Mock<Microsoft.AspNetCore.Hosting.IWebHostEnvironment> envMock)
     {
         userManagerMock = new Mock<UserManager<User>>(
             Mock.Of<IUserStore<User>>(), null, null, null, null, null, null, null, null);
@@ -32,13 +35,19 @@ public class IdentityControllerTests
         var dbContextMock = new Mock<StoreDbContext>(
             new DbContextOptions<StoreDbContext>());
 
-        return new IdentityController(userManagerMock.Object, signInManagerMock.Object, roleManagerMock.Object, dbContextMock.Object);
+        envMock = new Mock<Microsoft.AspNetCore.Hosting.IWebHostEnvironment>();
+
+        return new IdentityController(userManagerMock.Object, signInManagerMock.Object, roleManagerMock.Object, dbContextMock.Object, envMock.Object);
     }
 
     [Fact]
     public async Task Login_InvalidUser_ShowsErrorAndRedirects()
     {
-        var controller = GetController(out var userManagerMock, out var signInManagerMock, out _);
+        var controller = GetController(out var userManagerMock, out var signInManagerMock, out _, out _);
+
+        controller.TempData = new TempDataDictionary(
+            new DefaultHttpContext(),
+            Mock.Of<ITempDataProvider>());
         userManagerMock.Setup(x => x.FindByEmailAsync("test@example.com")).ReturnsAsync((User)null!);
 
         var loginDto = new LoginDto
@@ -57,7 +66,7 @@ public class IdentityControllerTests
     [Fact]
     public async Task Login_SuccessfulLogin_RedirectsToHome()
     {
-        var controller = GetController(out var userManagerMock, out var signInManagerMock, out _);
+        var controller = GetController(out var userManagerMock, out var signInManagerMock, out _, out _);
         var user = new User { Email = "test@example.com" };
 
         userManagerMock.Setup(x => x.FindByEmailAsync(user.Email)).ReturnsAsync(user);
@@ -82,7 +91,7 @@ public class IdentityControllerTests
     [Fact]
     public async Task Logout_RedirectsToWelcome()
     {
-        var controller = GetController(out _, out var signInManagerMock, out _);
+        var controller = GetController(out _, out var signInManagerMock, out _, out _);
         signInManagerMock.Setup(x => x.SignOutAsync()).Returns(Task.CompletedTask);
 
         var result = await controller.Logout();
@@ -95,7 +104,7 @@ public class IdentityControllerTests
     [Fact]
     public async Task EditInfo_UserNotFound_RedirectsToLogin()
     {
-        var controller = GetController(out var userManagerMock, out _, out _);
+        var controller = GetController(out var userManagerMock, out _, out _, out _);
         userManagerMock.Setup(x => x.GetUserAsync(It.IsAny<ClaimsPrincipal>()))
             .ReturnsAsync((User)null!);
 
@@ -108,7 +117,7 @@ public class IdentityControllerTests
     [Fact]
     public async Task EditInfo_ValidUser_ReturnsView()
     {
-        var controller = GetController(out var userManagerMock, out _, out _);
+        var controller = GetController(out var userManagerMock, out _, out _, out _);
         var user = new User { UserName = "test", Email = "test@example.com", PhoneNumber = "123" };
 
         userManagerMock.Setup(x => x.GetUserAsync(It.IsAny<ClaimsPrincipal>())).ReturnsAsync(user);
@@ -116,7 +125,10 @@ public class IdentityControllerTests
         var result = await controller.EditInfo();
 
         var view = Assert.IsType<ViewResult>(result);
-        var model = Assert.IsType<User>(view.Model);
+        var model = Assert.IsType<EditInfoViewModel>(view.Model);
+
         Assert.Equal(user.UserName, model.UserName);
+        Assert.Equal(user.Email, model.Email);
+        Assert.Equal(user.PhoneNumber, model.PhoneNumber);
     }
 }
