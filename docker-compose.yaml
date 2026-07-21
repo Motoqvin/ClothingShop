@@ -1,0 +1,38 @@
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: clothingstore-db
+    restart: unless-stopped
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "Admin123"
+      MSSQL_PID: "Express"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    healthcheck:
+      test: ["CMD", "/opt/mssql-tools/bin/sqlcmd", "-S", "localhost", "-U", "sa", "-P", "Admin123!", "-Q", "SELECT 1"]
+      interval: 10s
+      retries: 10
+ 
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: clothingstore-web
+    restart: unless-stopped
+    depends_on:
+      - db
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Production"
+      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__IdentityDb: "Server=db;Database=StoreDB;User Id=sa;Password=Admin123!;TrustServerCertificate=True;"
+    ports:
+      - "8080:8080"
+    volumes:
+      - product_images:/app/wwwroot/uploads/products
+
+volumes:
+  sqlserver_data:
+  product_images:

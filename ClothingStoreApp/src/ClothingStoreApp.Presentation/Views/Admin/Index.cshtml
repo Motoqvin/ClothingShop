@@ -3,328 +3,173 @@
 }
 
 <style>
-.admin-hero{
-    background:linear-gradient(135deg,#212529,#495057);
-    color:white;
-    border-radius:24px;
-    padding:3.5rem;
-    margin-bottom:2.5rem;
-    box-shadow:0 15px 35px rgba(0,0,0,.12);
-}
+    .admin-hero{
+        background:linear-gradient(135deg,#212529,#495057);
+        color:white;
+        border-radius:24px;
+        padding:3.5rem;
+        margin-bottom:2.5rem;
+        box-shadow:0 15px 35px rgba(0,0,0,.12);
+    }
 
-.admin-card{
-    border:none;
-    border-radius:22px;
-    box-shadow:0 10px 30px rgba(0,0,0,.08);
-    transition:.35s;
-    overflow:hidden;
-    height:100%;
-}
+    .admin-card{
+        border:none;
+        border-radius:22px;
+        box-shadow:0 10px 30px rgba(0,0,0,.08);
+        transition:.35s;
+        overflow:hidden;
+        height:100%;
+    }
 
-.admin-card:hover{
-    transform:translateY(-8px);
-    box-shadow:0 20px 40px rgba(0,0,0,.15);
-}
+    .admin-card:hover{
+        transform:translateY(-8px);
+        box-shadow:0 20px 40px rgba(0,0,0,.15);
+    }
 
-.admin-card:hover .icon-circle{
-    transform:scale(1.1);
-}
+    .admin-card:hover .icon-circle{
+        transform:scale(1.1);
+    }
 
-.icon-circle{
-    width:75px;
-    height:75px;
-    border-radius:50%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:34px;
-    transition:.35s;
-}
+    .icon-circle{
+        width:75px;
+        height:75px;
+        border-radius:50%;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        font-size:34px;
+        transition:.35s;
+    }
 
-.admin-card hr{
-    opacity:.15;
-}
+    .admin-card hr{
+        opacity:.15;
+    }
 
-.quick-stat{
-    border:none;
-    border-radius:18px;
-    box-shadow:0 8px 25px rgba(0,0,0,.08);
-}
+    .quick-stat{
+        border:none;
+        border-radius:18px;
+        box-shadow:0 8px 25px rgba(0,0,0,.08);
+    }
 
-.quick-stat h3{
-    margin:0;
-    font-weight:700;
-}
+    .quick-stat h3{
+        margin:0;
+        font-weight:700;
+    }
 
-.open-link{
-    font-weight:600;
-}
+    .open-link{
+        font-weight:600;
+    }
 </style>
 
 <div class="admin-hero">
-
-    <h1 class="display-5 fw-bold">
-        🛠 ClothingStore Administration
-    </h1>
-
-    <p class="lead mb-0">
-        Manage your products, orders, users and monitor your store from one place.
-    </p>
-
+    <h1 class="display-5 fw-bold">🛠 ClothingStore Administration</h1>
+    <p class="lead mb-0">Manage your products, orders, users and monitor your store from one place.</p>
 </div>
 
 <div class="row g-4 mb-5">
-
     <div class="col-md-3">
-
         <div class="card quick-stat">
-
             <div class="card-body text-center">
-
                 <i class="bi bi-lightning-charge text-warning fs-2"></i>
-
                 <h3>Fast</h3>
-
-                <p class="text-muted mb-0">
-                    Management
-                </p>
-
+                <p class="text-muted mb-0">Management</p>
             </div>
-
         </div>
-
     </div>
 
     <div class="col-md-3">
-
         <div class="card quick-stat">
-
             <div class="card-body text-center">
-
                 <i class="bi bi-shield-check text-success fs-2"></i>
-
                 <h3>Secure</h3>
-
-                <p class="text-muted mb-0">
-                    Admin Access
-                </p>
-
+                <p class="text-muted mb-0">Admin Access</p>
             </div>
-
         </div>
-
     </div>
 
     <div class="col-md-3">
-
         <div class="card quick-stat">
-
             <div class="card-body text-center">
-
                 <i class="bi bi-graph-up-arrow text-primary fs-2"></i>
-
                 <h3>Analytics</h3>
-
-                <p class="text-muted mb-0">
-                    Dashboard
-                </p>
-
+                <p class="text-muted mb-0">Dashboard</p>
             </div>
-
         </div>
-
     </div>
 
     <div class="col-md-3">
-
         <div class="card quick-stat">
-
             <div class="card-body text-center">
-
                 <i class="bi bi-gear-fill text-danger fs-2"></i>
-
                 <h3>Control</h3>
-
-                <p class="text-muted mb-0">
-                    Store Settings
-                </p>
-
+                <p class="text-muted mb-0">Store Settings</p>
             </div>
-
         </div>
-
     </div>
-
 </div>
 
 <div class="row g-4">
-
     <div class="col-lg-6 col-xl-3">
-
         <a asp-action="Orders" class="text-decoration-none">
-
             <div class="card admin-card">
-
                 <div class="card-body text-center p-4">
-
                     <div class="icon-circle bg-warning-subtle text-warning mx-auto mb-4">
-
                         <i class="bi bi-bag-check"></i>
-
                     </div>
-
-                    <h4 class="fw-bold text-dark">
-
-                        Orders
-
-                    </h4>
-
-                    <p class="text-muted">
-
-                        Track customer orders, deliveries and purchases.
-
-                    </p>
-
+                    <h4 class="fw-bold text-dark">Orders</h4>
+                    <p class="text-muted">Track customer orders, deliveries and purchases.</p>
                     <hr>
-
-                    <span class="text-warning open-link">
-
-                        View Orders →
-
-                    </span>
-
+                    <span class="text-warning open-link">View Orders →</span>
                 </div>
-
             </div>
-
         </a>
-
     </div>
 
     <div class="col-lg-6 col-xl-3">
-
         <a asp-action="Products" class="text-decoration-none">
-
             <div class="card admin-card">
-
                 <div class="card-body text-center p-4">
-
                     <div class="icon-circle bg-success-subtle text-success mx-auto mb-4">
-
                         <i class="bi bi-box-seam"></i>
-
                     </div>
-
-                    <h4 class="fw-bold text-dark">
-
-                        Products
-
-                    </h4>
-
-                    <p class="text-muted">
-
-                        Add, edit and remove products available in your store.
-
-                    </p>
-
+                    <h4 class="fw-bold text-dark">Products</h4>
+                    <p class="text-muted">Add, edit and remove products available in your store.</p>
                     <hr>
-
-                    <span class="text-success open-link">
-
-                        Manage Products →
-
-                    </span>
-
+                    <span class="text-success open-link">Manage Products →</span>
                 </div>
-
             </div>
-
         </a>
-
     </div>
 
     <div class="col-lg-6 col-xl-3">
-
         <a asp-action="Dashboard" class="text-decoration-none">
-
             <div class="card admin-card">
-
                 <div class="card-body text-center p-4">
-
                     <div class="icon-circle bg-primary-subtle text-primary mx-auto mb-4">
-
                         <i class="bi bi-speedometer2"></i>
-
                     </div>
-
-                    <h4 class="fw-bold text-dark">
-
-                        Dashboard
-
-                    </h4>
-
-                    <p class="text-muted">
-
-                        View sales, revenue, users and store performance in one place.
-
-                    </p>
-
+                    <h4 class="fw-bold text-dark">Dashboard</h4>
+                    <p class="text-muted">View sales, revenue, users and store performance in one place.</p>
                     <hr>
-
-                    <span class="text-primary open-link">
-
-                        Open Dashboard →
-
-                    </span>
-
+                    <span class="text-primary open-link">Open Dashboard →</span>
                 </div>
-
             </div>
-
         </a>
-
     </div>
 
     <div class="col-lg-6 col-xl-3">
-
         <a asp-action="Users" class="text-decoration-none">
-
             <div class="card admin-card">
-
                 <div class="card-body text-center p-4">
-
                     <div class="icon-circle bg-danger-subtle text-danger mx-auto mb-4">
-
                         <i class="bi bi-people"></i>
-
                     </div>
-
-                    <h4 class="fw-bold text-dark">
-
-                        Users
-
-                    </h4>
-
-                    <p class="text-muted">
-
-                        Manage registered users, accounts and permissions.
-
-                    </p>
-
+                    <h4 class="fw-bold text-dark">Users</h4>
+                    <p class="text-muted">Manage registered users, accounts and permissions.</p>
                     <hr>
-
-                    <span class="text-danger open-link">
-
-                        Manage Users →
-
-                    </span>
-
+                    <span class="text-danger open-link">Manage Users →</span>
                 </div>
-
             </div>
-
         </a>
-
     </div>
-
 </div>

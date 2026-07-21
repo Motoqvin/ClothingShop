@@ -47,52 +47,25 @@
 </style>
 
 <div class="hero">
-
-    <h1 class="fw-bold">
-        <i class="bi bi-shield-lock-fill"></i>
-        Edit User Roles
-    </h1>
-
-    <p class="mb-0 opacity-75">
-        @Model.Email
-    </p>
-
+    <h1 class="fw-bold"><i class="bi bi-shield-lock-fill"></i>Edit User Roles</h1>
+    <p class="mb-0 opacity-75">@Model.Email</p>
 </div>
 
 <div class="row justify-content-center">
-
     <div class="col-lg-8">
-
         <div class="card section-card">
-
             <div class="card-body p-5">
-
                 <form asp-action="EditUserRoles" method="post">
-
                     <input type="hidden" asp-for="UserId" />
-
-                    <h4 class="mb-4">
-
-                        <i class="bi bi-person-gear"></i>
-
-                        Available Roles
-
-                    </h4>
-
+                    <h4 class="mb-4"><i class="bi bi-person-gear"></i>Available Roles</h4>
                     <div class="row g-3">
-
                         @for (int i = 0; i < Model.AvailableRoles.Count; i++)
                         {
                             var role = Model.AvailableRoles[i];
-
                             <div class="col-md-6">
-
                                 <label class="role-card d-flex justify-content-between align-items-center">
-
                                     <div>
-
                                         <h5 class="mb-1">
-
                                             @if(role == "Admin")
                                             {
                                                 <span class="text-danger">
@@ -105,64 +78,34 @@
                                                     <i class="bi bi-person-fill"></i>
                                                 </span>
                                             }
-
                                             @role
-
                                         </h5>
-
                                         <small class="text-muted">
-
                                             @(role == "Admin"
                                                 ? "Full access to the system."
                                                 : "Regular customer account.")
-
                                         </small>
-
                                     </div>
-
                                     <input type="checkbox"
                                            class="form-check-input"
                                            name="SelectedRoles"
                                            value="@role"
                                            @(Model.SelectedRoles.Contains(role) ? "checked" : "") />
-
                                 </label>
-
                             </div>
                         }
-
                     </div>
-
                     <hr class="my-5" />
-
                     <div class="d-flex justify-content-between">
-
-                        <a asp-action="Users"
-                           class="btn btn-outline-secondary btn-modern">
-
-                            <i class="bi bi-arrow-left"></i>
-
-                            Back
-
+                        <a asp-action="Users" class="btn btn-outline-secondary btn-modern">
+                            <i class="bi bi-arrow-left"></i>Back
                         </a>
-
-                        <button type="submit"
-                                class="btn btn-dark btn-modern">
-
-                            <i class="bi bi-check-circle-fill"></i>
-
-                            Save Changes
-
+                        <button type="submit" class="btn btn-dark btn-modern">
+                            <i class="bi bi-check-circle-fill"></i>Save Changes
                         </button>
-
                     </div>
-
                 </form>
-
             </div>
-
         </div>
-
     </div>
-
 </div>

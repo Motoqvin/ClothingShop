@@ -53,6 +53,7 @@ public class OrdersEFRepository : IOrdersRepository
     public Order? GetById(int id)
     {
         return dbContext.Orders
+            .Include(o => o.User)
             .Include(o => o.OrdersProducts)
             .ThenInclude(op => op.Product)
             .FirstOrDefault(o => o.Id == id);

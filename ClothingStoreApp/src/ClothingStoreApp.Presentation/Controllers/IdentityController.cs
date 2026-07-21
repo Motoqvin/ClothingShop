@@ -5,6 +5,7 @@ using ClothingStoreApp.Core.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using ClothingStoreApp.Presentation.ViewModels;
+using Microsoft.AspNetCore.Hosting;
 
 namespace ClothingStoreApp.Presentation.Controllers;
 
@@ -15,18 +16,21 @@ public class IdentityController : Controller
     private readonly SignInManager<User> signInManager;
     private readonly RoleManager<IdentityRole> roleManager;
     private readonly StoreDbContext dbContext;
+    private readonly IWebHostEnvironment _environment;
 
     public IdentityController(
         UserManager<User> userManager,
         SignInManager<User> signInManager,
         RoleManager<IdentityRole> roleManager,
-        StoreDbContext dbContext
+        StoreDbContext dbContext,
+        IWebHostEnvironment environment
         )
     {
         this.userManager = userManager;
         this.signInManager = signInManager;
         this.roleManager = roleManager;
         this.dbContext = dbContext;
+        this._environment = environment;
     }
 
     public IActionResult Index()
@@ -256,6 +260,34 @@ public class IdentityController : Controller
         }
 
         return base.RedirectToAction(actionName: "Index", controllerName: "Home");
+    }
+    
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteAvatar()
+    {
+        var user = await userManager.GetUserAsync(User);
+
+        if (user == null)
+            return NotFound();
+
+        if (!string.IsNullOrEmpty(user.Avatar))
+        {
+            var filePath = Path.Combine(
+                _environment.WebRootPath,
+                user.Avatar);
+
+            if (System.IO.File.Exists(filePath))
+                System.IO.File.Delete(filePath);
+
+            user.Avatar = null;
+
+            await userManager.UpdateAsync(user);
+        }
+
+        TempData["Success"] = "Avatar deleted successfully.";
+
+        return RedirectToAction(nameof(EditInfo));
     }
 
     [HttpGet]

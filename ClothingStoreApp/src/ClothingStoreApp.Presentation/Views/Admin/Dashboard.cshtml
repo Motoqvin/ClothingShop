@@ -2,7 +2,6 @@
 
 @{
     ViewData["Title"] = "Dashboard";
-
     var averageOrder =
         Model.TotalOrders == 0
         ? 0
@@ -10,335 +9,298 @@
 }
 
 <style>
-.dashboard-hero{
-    background:linear-gradient(135deg,#212529,#495057);
-    color:white;
-    border-radius:24px;
-    padding:3rem;
-    margin-bottom:2rem;
-    box-shadow:0 15px 35px rgba(0,0,0,.12);
-}
+    .dashboard-hero{
+        background:linear-gradient(135deg,#212529,#495057);
+        color:white;
+        border-radius:24px;
+        padding:3rem;
+        margin-bottom:2rem;
+        box-shadow:0 15px 35px rgba(0,0,0,.12);
+    }
 
-.stat-card{
-    border:none;
-    border-radius:22px;
-    box-shadow:0 10px 30px rgba(0,0,0,.08);
-    transition:.3s;
-    height:100%;
-}
+    .stat-card{
+        border:none;
+        border-radius:22px;
+        box-shadow:0 10px 30px rgba(0,0,0,.08);
+        transition:.3s;
+        height:100%;
+    }
 
-.stat-card:hover{
-    transform:translateY(-6px);
-    box-shadow:0 20px 40px rgba(0,0,0,.15);
-}
+    .stat-card:hover{
+        transform:translateY(-6px);
+        box-shadow:0 20px 40px rgba(0,0,0,.15);
+    }
 
-.icon-circle{
-    width:70px;
-    height:70px;
-    border-radius:50%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:30px;
-}
+    .icon-circle{
+        width:70px;
+        height:70px;
+        border-radius:50%;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        font-size:30px;
+    }
 
-.quick-card{
-    border:none;
-    border-radius:20px;
-    box-shadow:0 10px 25px rgba(0,0,0,.08);
-}
+    .quick-card{
+        border:none;
+        border-radius:20px;
+        box-shadow:0 10px 25px rgba(0,0,0,.08);
+    }
 
-.quick-btn{
-    border-radius:12px;
-    padding:14px;
-    font-weight:600;
-}
+    .quick-btn{
+        border-radius:12px;
+        padding:14px;
+        font-weight:600;
+    }
 
-.metric{
-    font-size:2rem;
-    font-weight:700;
-}
+    .metric{
+        font-size:2rem;
+        font-weight:700;
+    }
 
-.small-label{
-    color:#6c757d;
-    font-weight:500;
-}
+    .small-label{
+        color:#6c757d;
+        font-weight:500;
+    }
 
-.info-box{
-    border:none;
-    border-radius:20px;
-    box-shadow:0 10px 25px rgba(0,0,0,.08);
-}
+    .info-box{
+        border:none;
+        border-radius:20px;
+        box-shadow:0 10px 25px rgba(0,0,0,.08);
+    }
+
+    .chart-container{
+        position: relative;
+        height: 250px;
+    }
 </style>
 
 <div class="dashboard-hero">
-
-    <h1 class="display-5 fw-bold">
-        📊 Admin Dashboard
-    </h1>
-
-    <p class="lead mb-0">
-        Welcome back! Here's an overview of your Clothing Store.
-    </p>
-
+    <h1 class="display-5 fw-bold">📊 Admin Dashboard</h1>
+    <p class="lead mb-0">Welcome back! Here's an overview of your Clothing Store.</p>
 </div>
 
 <div class="row g-4">
-
     <div class="col-md-6 col-xl-3">
-
         <div class="card stat-card">
-
             <div class="card-body">
-
                 <div class="d-flex justify-content-between">
-
                     <div>
-
-                        <div class="small-label">
-                            Total Orders
-                        </div>
-
-                        <div class="metric">
-                            @Model.TotalOrders
-                        </div>
-
+                        <div class="small-label">Total Orders</div>
+                        <div class="metric">@Model.TotalOrders</div>
                     </div>
-
                     <div class="icon-circle bg-primary-subtle text-primary">
-
                         <i class="bi bi-bag-fill"></i>
-
                     </div>
-
                 </div>
-
             </div>
-
         </div>
-
     </div>
 
     <div class="col-md-6 col-xl-3">
-
         <div class="card stat-card">
-
             <div class="card-body">
-
                 <div class="d-flex justify-content-between">
-
                     <div>
-
-                        <div class="small-label">
-                            Total Users
-                        </div>
-
-                        <div class="metric">
-                            @Model.TotalUsers
-                        </div>
-
+                        <div class="small-label">Total Users</div>
+                        <div class="metric">@Model.TotalUsers</div>
                     </div>
-
                     <div class="icon-circle bg-success-subtle text-success">
-
                         <i class="bi bi-people-fill"></i>
-
                     </div>
-
                 </div>
-
             </div>
-
         </div>
-
     </div>
 
     <div class="col-md-6 col-xl-3">
-
         <div class="card stat-card">
-
             <div class="card-body">
-
                 <div class="d-flex justify-content-between">
-
                     <div>
-
-                        <div class="small-label">
-                            Products
-                        </div>
-
-                        <div class="metric">
-                            @Model.TotalProducts
-                        </div>
-
+                        <div class="small-label">Products</div>
+                        <div class="metric">@Model.TotalProducts</div>
                     </div>
-
                     <div class="icon-circle bg-warning-subtle text-warning">
-
                         <i class="bi bi-box-seam"></i>
-
                     </div>
-
                 </div>
-
             </div>
-
         </div>
-
     </div>
 
     <div class="col-md-6 col-xl-3">
-
         <div class="card stat-card">
-
             <div class="card-body">
-
                 <div class="d-flex justify-content-between">
-
                     <div>
-
-                        <div class="small-label">
-                            Revenue
-                        </div>
-
-                        <div class="metric">
-                            $@Model.TotalRevenue.ToString("N2")
-                        </div>
-
+                        <div class="small-label">Revenue</div>
+                        <div class="metric">$@Model.TotalRevenue.ToString("N2")</div>
                     </div>
-
                     <div class="icon-circle bg-danger-subtle text-danger">
-
                         <i class="bi bi-currency-dollar"></i>
-
                     </div>
-
                 </div>
-
             </div>
-
         </div>
-
     </div>
-
 </div>
 
 <div class="row mt-5">
-
     <div class="col-lg-8">
-
         <div class="card info-box">
-
             <div class="card-body">
-
-                <h4 class="mb-4">
-
-                    📈 Store Statistics
-
-                </h4>
-
+                <h4 class="mb-4">📈 Store Statistics</h4>
                 <div class="row text-center">
-
                     <div class="col-md-4">
-
-                        <h2 class="fw-bold text-primary">
-
-                            @averageOrder.ToString("N2")
-
-                        </h2>
-
-                        <p class="text-muted">
-
-                            Average Order
-
-                        </p>
-
+                        <h2 class="fw-bold text-primary">@averageOrder.ToString("N2")</h2>
+                        <p class="text-muted">Average Order</p>
                     </div>
-
                     <div class="col-md-4">
-
-                        <h2 class="fw-bold text-success">
-
-                            @Model.TotalRevenue.ToString("N0")
-
-                        </h2>
-
-                        <p class="text-muted">
-
-                            Revenue
-
-                        </p>
-
+                        <h2 class="fw-bold text-success">@Model.TotalRevenue.ToString("N0")</h2>
+                        <p class="text-muted">Revenue</p>
                     </div>
-
                     <div class="col-md-4">
-
-                        <h2 class="fw-bold text-warning">
-
-                            @Model.TotalProducts
-
-                        </h2>
-
-                        <p class="text-muted">
-
-                            Products Available
-
-                        </p>
-
+                        <h2 class="fw-bold text-warning">@Model.TotalProducts</h2>
+                        <p class="text-muted">Products Available</p>
                     </div>
-
                 </div>
-
             </div>
-
         </div>
 
+        <div class="row g-4 mt-2">
+            <div class="col-lg-6">
+                <div class="card info-box h-100">
+                    <div class="card-body">
+                        <h4 class="mb-4">🥧 Store Overview</h4>
+                        <div class="chart-container align-items-center d-flex flex-column justify-content-center">
+                            <canvas id="storeChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="card info-box h-100">
+                    <div class="card-body">
+                        <h4 class="mb-4">📊 Store Comparison</h4>
+                        <div class="chart-container">
+                            <canvas id="comparisonChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="col-lg-4">
-
         <div class="card quick-card">
-
             <div class="card-body">
-
-                <h4 class="mb-4">
-
-                    ⚡ Quick Actions
-
-                </h4>
-
+                <h4 class="mb-4">⚡ Quick Actions</h4>
                 <div class="d-grid gap-3">
-
-                    <a asp-controller="Admin"
-                       asp-action="Products"
-                       class="btn btn-dark quick-btn">
-
-                        📦 Manage Products
-
-                    </a>
-
-                    <a asp-controller="Home"
-                       asp-action="Index"
-                       class="btn btn-outline-primary quick-btn">
-
-                        🛍 View Store
-
-                    </a>
-
-                    <a asp-controller="Admin"
-                       asp-action="Orders"
-                       class="btn btn-outline-success quick-btn">
-
-                        📄 View Orders
-
-                    </a>
-
+                    <a asp-controller="Admin" asp-action="Products" class="btn btn-dark quick-btn">📦 Manage Products</a>
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-outline-primary quick-btn">🛍 View Store</a>
+                    <a asp-controller="Admin" asp-action="Orders" class="btn btn-outline-success quick-btn">📄 View Orders</a>
                 </div>
-
             </div>
-
         </div>
 
+        <div class="card quick-card mt-4">
+            <div class="card-body">
+                <h4 class="mb-4">📈 Store Health</h4>
+                <p class="mb-1">Products</p>
+                <div class="progress mb-3" style="height:12px">
+                    <div class="progress-bar bg-warning" style="width:@Math.Min(Model.TotalProducts,100)%"></div>
+                </div>
+                <p class="mb-1">Orders</p>
+                <div class="progress mb-3" style="height:12px">
+                    <div class="progress-bar bg-primary" style="width:@Math.Min(Model.TotalOrders,100)%"></div>
+                </div>
+                <p class="mb-1">Users</p>
+                <div class="progress" style="height:12px">
+                    <div class="progress-bar bg-success" style="width:@Math.Min(Model.TotalUsers,100)%"></div>
+                </div>
+            </div>
+        </div>
     </div>
-
 </div>
+
+
+@section Scripts{
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        new Chart(document.getElementById("storeChart"), {
+            type: "doughnut",
+            data: {
+                labels: [
+                    "Orders",
+                    "Products",
+                    "Users"
+                ],
+                datasets: [{
+                    data: [
+                        @Model.TotalOrders,
+                        @Model.TotalProducts,
+                        @Model.TotalUsers
+                    ],
+                    backgroundColor: [
+                        "#0d6efd",
+                        "#ffc107",
+                        "#198754"
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        position: "bottom"
+                    }
+                },
+                cutout: "65%"
+            }
+        });
+
+        new Chart(document.getElementById("comparisonChart"), {
+            type: "bar",
+            data: {
+                labels: [
+                    "Orders",
+                    "Products",
+                    "Users"
+                ],
+                datasets: [{
+                    label: "Count",
+                    data: [
+
+                        @Model.TotalOrders,
+                        @Model.TotalProducts,
+                        @Model.TotalUsers
+
+                    ],
+                    backgroundColor: [
+                        "#0d6efd",
+                        "#ffc107",
+                        "#198754"
+                    ],
+                    borderRadius: 10
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+}

@@ -3,6 +3,17 @@
     ViewData["Title"] = "Admin - Products";
 }
 
+<style>
+    .product-admin-card {
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .product-admin-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.1) !important;
+    }
+</style>
+
 <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
     <h2 class="mb-0">📦 Product Management</h2>
     <a class="btn bg-dark text-white rounded-3" asp-action="CreateProduct">
@@ -64,13 +75,4 @@ else
     </div>
 }
 
-<style>
-    .product-admin-card {
-        transition: transform 0.15s ease, box-shadow 0.15s ease;
-    }
 
-    .product-admin-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.1) !important;
-    }
-</style>

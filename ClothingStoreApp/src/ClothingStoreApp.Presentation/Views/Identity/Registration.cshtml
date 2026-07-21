@@ -79,241 +79,135 @@
 
 <div class="hero">
     <h1>Create Your Account</h1>
-    <p class="mb-0">
-        Join ClothingStore and discover your next favorite outfit.
-    </p>
+    <p class="mb-0">Join ClothingStore and discover your next favorite outfit.</p>
 </div>
 
 <div class="container">
     <div class="row justify-content-center">
-
         <div class="col-lg-6">
-
             <div class="card register-card">
-
                 <div class="card-body">
-
-                    <h3 class="card-title text-center mb-4">
-                        Register
-                    </h3>
-
-                    <form asp-action="Registration"
-                          method="post"
-                          enctype="multipart/form-data">
-
-                        <div asp-validation-summary="ModelOnly"
-                             class="alert alert-danger"></div>
-
+                    <h3 class="card-title text-center mb-4">Register</h3>
+                    <form asp-action="Registration" method="post" enctype="multipart/form-data">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
                         <div class="upload-box text-center mb-4">
-
                             <img id="avatarPreview"
                                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8oghbsuzggpkknQSSU-Ch_xep_9v3m6EeBQ&s"
                                  class="avatar-preview"
                                  alt="Avatar">
-
                             <label asp-for="Avatar" class="form-label fw-semibold">
                                 Upload Avatar (Optional)
                             </label>
-
                             <input asp-for="Avatar"
                                    type="file"
                                    class="form-control"
                                    accept="image/*"
                                    onchange="previewAvatar(this)">
-
-                            <span asp-validation-for="Avatar"
-                                  class="text-danger small"></span>
-
+                            <span asp-validation-for="Avatar" class="text-danger small"></span>
                         </div>
-
                         <div class="mb-3">
-
                             <label asp-for="Username" class="form-label"></label>
-
                             <div class="input-group">
                                 <span class="input-group-text">
                                     <i class="bi bi-person"></i>
                                 </span>
-
                                 <input asp-for="Username" class="form-control">
                             </div>
-
-                            <span asp-validation-for="Username"
-                                  class="text-danger small"></span>
-
+                            <span asp-validation-for="Username" class="text-danger small"></span>
                         </div>
-
                         <div class="mb-3">
-
                             <label asp-for="Email" class="form-label"></label>
-
                             <div class="input-group">
                                 <span class="input-group-text">
                                     <i class="bi bi-envelope"></i>
                                 </span>
-
-                                <input asp-for="Email"
-                                       class="form-control">
+                                <input asp-for="Email" class="form-control">
                             </div>
-
-                            <span asp-validation-for="Email"
-                                  class="text-danger small"></span>
-
+                            <span asp-validation-for="Email" class="text-danger small"></span>
                         </div>
-
                         <div class="mb-3">
-
-                            <label asp-for="PasswordHash"
-                                   class="form-label">
-                                Password
-                            </label>
-
+                            <label asp-for="PasswordHash" class="form-label">Password</label>
                             <div class="input-group">
-
                                 <span class="input-group-text">
                                     <i class="bi bi-lock"></i>
                                 </span>
-
                                 <input asp-for="PasswordHash"
                                        id="password"
                                        type="password"
                                        class="form-control">
-
                                 <button class="btn btn-outline-secondary"
                                         type="button"
                                         onclick="togglePassword()">
-
-                                    <i id="eye"
-                                       class="bi bi-eye"></i>
-
+                                    <i id="eye" class="bi bi-eye"></i>
                                 </button>
-
                             </div>
-
-                            <span asp-validation-for="PasswordHash"
-                                  class="text-danger small"></span>
-
+                            <span asp-validation-for="PasswordHash" class="text-danger small"></span>
                         </div>
-
                         <div class="mb-3">
-
-                            <label asp-for="PhoneNumber"
-                                   class="form-label">
+                            <label asp-for="PhoneNumber" class="form-label">
                                 Phone Number
                             </label>
-
                             <div class="input-group">
                                 <span class="input-group-text">
                                     <i class="bi bi-telephone"></i>
                                 </span>
-
-                                <input asp-for="PhoneNumber"
-                                       class="form-control">
+                                <input asp-for="PhoneNumber" class="form-control">
                             </div>
-
-                            <span asp-validation-for="PhoneNumber"
-                                  class="text-danger small"></span>
-
+                            <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
                         </div>
 
                         <div class="mb-4">
-
-                            <label asp-for="Address"
-                                   class="form-label"></label>
-
+                            <label asp-for="Address" class="form-label"></label>
                             <div class="input-group">
-
                                 <span class="input-group-text">
                                     <i class="bi bi-geo-alt"></i>
                                 </span>
-
-                                <input asp-for="Address"
-                                       class="form-control">
-
+                                <input asp-for="Address" class="form-control">
                             </div>
-
-                            <span asp-validation-for="Address"
-                                  class="text-danger small"></span>
-
+                            <span asp-validation-for="Address" class="text-danger small"></span>
                         </div>
 
                         <button class="btn btn-dark btn-register w-100">
-                            <i class="bi bi-person-plus"></i>
-                            Create Account
+                            <i class="bi bi-person-plus"></i>Create Account
                         </button>
-
                     </form>
-
                     <hr class="my-4">
-
                     <div class="text-center">
-
-                        <p class="text-muted mb-2">
-                            Already have an account?
-                        </p>
-
-                        <a asp-action="Login"
-                           class="btn btn-outline-dark w-100 btn-register">
-
-                            Sign In
-
-                        </a>
-
+                        <p class="text-muted mb-2">Already have an account?</p>
+                        <a asp-action="Login" class="btn btn-outline-dark w-100 btn-register">Sign In</a>
                     </div>
-
                 </div>
-
             </div>
-
         </div>
-
     </div>
 </div>
 
 @section Scripts{
-
     <partial name="_ValidationScriptsPartial"/>
 
     <script>
-
         function previewAvatar(input){
-
             if(input.files && input.files[0]){
-
                 const reader = new FileReader();
-
                 reader.onload = function(e){
-
                     document.getElementById("avatarPreview").src = e.target.result;
-
                 }
-
                 reader.readAsDataURL(input.files[0]);
-
             }
-
         }
 
         function togglePassword(){
-
             const input = document.getElementById("password");
             const eye = document.getElementById("eye");
 
             if(input.type === "password"){
-
                 input.type = "text";
                 eye.className = "bi bi-eye-slash";
-
             }
             else{
-
                 input.type = "password";
                 eye.className = "bi bi-eye";
-
             }
-
         }
-
     </script>
-
 }
