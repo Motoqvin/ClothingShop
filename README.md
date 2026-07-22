@@ -2,80 +2,172 @@
 
 # 🛍️ ClothingStoreApp
 
-### Modern ASP.NET Core MVC Clothing Store
+### Modern E-Commerce Platform built with ASP.NET Core MVC
 
-A full-stack e-commerce application built with **ASP.NET Core MVC**, featuring user authentication, shopping cart, checkout, profile management, email notifications, and an admin dashboard.
+A production-ready clothing store built with **ASP.NET Core MVC (.NET 9)** featuring secure authentication, product management, shopping cart, checkout, email notifications, user profiles, logging, and an administrator dashboard.
 
 <p>
-  <img src="https://img.shields.io/badge/.NET-9.0-512BD4?style=for-the-badge&logo=dotnet&logoColor=white"/>
-  <img src="https://img.shields.io/badge/ASP.NET_Core-MVC-512BD4?style=for-the-badge&logo=dotnet&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Entity_Framework-Core-5C2D91?style=for-the-badge"/>
-  <img src="https://img.shields.io/badge/SQL_Server-CC2927?style=for-the-badge&logo=microsoftsqlserver&logoColor=white"/>
-  <img src="https://img.shields.io/badge/Bootstrap-5-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white"/>
+
+<img src="https://img.shields.io/badge/.NET-9-512BD4?style=for-the-badge&logo=dotnet&logoColor=white"/>
+
+<img src="https://img.shields.io/badge/ASP.NET_Core-MVC-512BD4?style=for-the-badge"/>
+
+<img src="https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white"/>
+
+<img src="https://img.shields.io/badge/Entity_Framework_Core-68217A?style=for-the-badge"/>
+
+<img src="https://img.shields.io/badge/Dapper-00599C?style=for-the-badge"/>
+
+<img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white"/>
+
+<img src="https://img.shields.io/badge/Bootstrap-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white"/>
+
 </p>
 
----
-
-### ⭐ Features
-
-👤 Authentication • 🛒 Shopping Cart • 📦 Orders • 📧 Email Notifications • 👑 Admin Dashboard • 🖼️ Avatar Uploads
+**ASP.NET Core • PostgreSQL • Entity Framework Core • Dapper • Identity • Docker**
 
 </div>
 
 ---
 
-# 📑 Table of Contents
+# ✨ Features
 
-- 🚀 Getting Started
-- 🛠 Tech Stack
-- 📁 Project Structure
-- ⚙️ Configuration
-- 📧 Email Setup
-- ✨ Features
-- 🔐 Roles
-- 🖼 Avatar Uploads
+### 👤 Authentication
+
+* User Registration
+* Secure Login & Logout
+* ASP.NET Core Identity
+* Role-based Authorization
+* Cookie Authentication
+* Administrator Account Seeding
+
+---
+
+### 🛍️ Store
+
+* Browse Products
+* Product Details
+* Shopping Cart
+* Quantity Management
+* Session-based Cart
+* Checkout
+
+---
+
+### 📦 Orders
+
+* Order History
+* Order Details
+* Automatic Total Calculation
+* Email Confirmation after Purchase
+
+---
+
+### 👤 User Profile
+
+* Update Personal Information
+* Upload Avatar
+* Replace Existing Avatar
+* Delete Avatar
+* Persistent Profile Data
+
+---
+
+### 👑 Admin Dashboard
+
+* Dashboard Statistics
+* Product CRUD
+* User Management
+* Role Management
+* Order Management
+* Order Details
+
+---
+
+### ⚙️ Infrastructure
+
+* Repository Pattern
+* Service Layer
+* Entity Framework Core
+* FluentValidation
+* Custom Middleware
+* HTTP Request Logging
+* Exception Handling Middleware
 
 ---
 
 # 🛠 Tech Stack
 
-| Category | Technologies |
-|-----------|--------------|
-| Backend | ASP.NET Core MVC (.NET 9) |
-| Database | SQL Server |
-| ORM | Entity Framework Core + Dapper |
-| Authentication | ASP.NET Core Identity |
-| Validation | FluentValidation |
-| Frontend | Bootstrap 5, jQuery |
-| Email | SMTP |
+| Category         | Technology                |
+| ---------------- | ------------------------- |
+| Backend          | ASP.NET Core MVC (.NET 9) |
+| Database         | PostgreSQL                |
+| ORM              | Entity Framework Core     |
+| Micro ORM        | Dapper                    |
+| Authentication   | ASP.NET Core Identity     |
+| Validation       | FluentValidation          |
+| Frontend         | Bootstrap 5               |
+| Email            | SMTP                      |
+| Containerization | Docker & Docker Compose   |
+
+---
+
+# 🏗 Architecture
+
+```
+Presentation
+│
+├── Controllers
+├── Views
+├── ViewModels
+└── Validators
+
+        ↓
+
+Application Services
+
+        ↓
+
+Repositories
+
+        ↓
+
+Entity Framework Core
+
+        ↓
+
+PostgreSQL
+```
 
 ---
 
 # 📁 Project Structure
 
-```text
+```
 ClothingStoreApp
 │
 ├── src
 │   ├── ClothingStoreApp.Core
-│   │      Domain models
-│   │      DTOs
-│   │      Interfaces
-│   │      Enums
-│   │      Exceptions
+│   │   ├── Models
+│   │   ├── DTOs
+│   │   ├── Interfaces
+│   │   ├── Exceptions
+│   │   ├── Services
+│   │   └── Settings
 │   │
 │   ├── ClothingStoreApp.Infrastructure
-│   │      DbContext
-│   │      Repositories
-│   │      Services
-│   │      Migrations
+│   │   ├── Data
+│   │   ├── Repositories
+│   │   ├── Services
+│   │   └── Migrations
 │   │
 │   └── ClothingStoreApp.Presentation
-│          Controllers
-│          Views
-│          ViewModels
-│          Validators
-│          wwwroot
+│       ├── Controllers
+│       ├── Views
+│       ├── ViewModels
+│       ├── Validators
+│       ├── Middlewares
+│       └── wwwroot
 │
 └── tests
     └── ClothingStoreApp.Tests
@@ -83,40 +175,34 @@ ClothingStoreApp
 
 ---
 
-# 🚀 Getting Started
+# 🚀 Running with Docker
 
-## Prerequisites
+Clone the repository
 
-- .NET 9 SDK
-- SQL Server
+```bash
+git clone https://github.com/Motoqvin/ClothingStoreApp.git
 
----
-
-## Configure Database
-
-Inside
-
-```text
-src/ClothingStoreApp.Presentation/appsettings.json
+cd ClothingStoreApp
 ```
 
-configure
+Start the application
 
-```json
-"ConnectionStrings": {
-  "IdentityDB": "Server=localhost;Database=StoreDB;Integrated Security=True;TrustServerCertificate=True;"
-}
+```bash
+docker compose up --build
 ```
 
 The application automatically:
 
-- ✅ Creates the database
-- ✅ Seeds roles
-- ✅ Creates an administrator account
+* Creates the PostgreSQL database
+* Applies EF Core migrations
+* Seeds Identity roles
+* Creates the administrator account
 
-Default admin credentials
+---
 
-```text
+## Default Administrator
+
+```
 Email:
 admin@store.com
 
@@ -124,193 +210,104 @@ Password:
 Admin123!
 ```
 
-> ⚠️ Change the password before deploying.
+> Change these credentials before deploying.
 
 ---
 
-# 📧 Email Configuration
+# ⚙️ Environment Variables
 
-Order confirmations are sent through SMTP.
+Example configuration
 
-```json
-"Smtp": {
-  "Host": "smtp.gmail.com",
-  "Port": 587,
-  "EnableSsl": true,
-  "Username": "",
-  "Password": "",
-  "FromEmail": "",
-  "FromName": "Clothing Store"
-}
+```env
+ConnectionStrings__IdentityDb=Host=db;Port=5432;Database=StoreDB;Username=postgres;Password=postgres
+
+Smtp__Host=smtp.gmail.com
+Smtp__Port=587
+Smtp__EnableSsl=true
+Smtp__Username=your_email@gmail.com
+Smtp__Password=your_app_password
+Smtp__FromEmail=your_email@gmail.com
+Smtp__FromName=Clothing Store
 ```
 
-If SMTP is not configured:
+---
 
-- Checkout still succeeds ✅
-- Email sending is skipped ✅
+# 📧 Email
 
-For Gmail use an **App Password**, not your Google account password.
+The application supports SMTP email notifications.
 
-You can also store credentials securely:
+When a customer places an order:
+
+* Order confirmation email is sent automatically.
+* If SMTP is not configured, checkout still completes successfully.
+
+For Gmail, use an **App Password** instead of your account password.
+
+---
+
+# 🖼 File Uploads
+
+Uploaded files are stored inside
+
+```
+wwwroot/uploads
+```
+
+Supported uploads:
+
+* User Avatars
+* Product Images
+
+Features:
+
+* GUID-based filenames
+* Automatic replacement
+* Old image cleanup
+* Persistent Docker volume support
+
+---
+
+# 📝 Logging
+
+Every HTTP request is stored in the database.
+
+Captured information includes:
+
+* Request Method
+* Path
+* Status Code
+* Processing Time
+* Timestamp
+
+---
+
+# 🧪 Running Tests
 
 ```bash
-dotnet user-secrets set "Smtp:Username" "your@email.com"
-dotnet user-secrets set "Smtp:Password" "your-password"
+dotnet test
 ```
 
 ---
 
-# ▶️ Running the Project
+# 🔮 Future Improvements
 
-Restore packages
-
-```bash
-dotnet restore
-```
-
-Run
-
-```bash
-dotnet run --project src/ClothingStoreApp.Presentation
-```
-
-Run tests
-
-```bash
-dotnet test tests/ClothingStoreApp.Tests
-```
-
----
-
-# ✨ Features
-
-## 👤 User Authentication
-
-- Register
-- Login
-- Logout
-- Role-based authorization
-- ASP.NET Identity
-
----
-
-## 👤 User Profile
-
-- View profile
-- Edit username
-- Edit email
-- Edit phone number
-- Upload avatar
-- Replace avatar
-- Automatic deletion of previous avatar
-
----
-
-## 🧥 Product Catalog
-
-- Browse products
-- Product details
-- Categories
-- Product images
-
----
-
-## 🛒 Shopping Cart
-
-- Add items
-- Remove items
-- Update quantities
-- Session-based cart
-
----
-
-## 💳 Checkout
-
-- Create orders
-- Save order history
-- Send confirmation email
-
----
-
-## 👑 Admin Dashboard
-
-Available only for **Admin** users.
-
-Features include:
-
-- Dashboard
-- Product Management
-- User Management
-- Role Management
-- Order Management
-- Order Details
-
----
-
-## 📝 Logging
-
-Every HTTP request is logged using
-
-```
-IHttpLogRepository
-```
-
----
-
-# 🔐 Roles
-
-| Role | Permissions |
-|------|-------------|
-| 👤 User | Shop, manage profile, place orders |
-| 👑 Admin | Full administrative access |
-
----
-
-# 🖼 Avatar Uploads
-
-User avatars are stored in
-
-```text
-wwwroot/uploads/avatars/
-```
-
-Features
-
-- Upload profile pictures
-- Automatically generate GUID filenames
-- Delete previous avatar when uploading a new one
-- Default avatar for users without an uploaded image
-
----
-
-# 📸 Screenshots
-
-You can add screenshots here.
-
-```md
-## Home
-
-![Home](screenshots/home.png)
-
-## Products
-
-![Products](screenshots/products.png)
-
-## Shopping Cart
-
-![Cart](screenshots/cart.png)
-
-## Admin Dashboard
-
-![Admin](screenshots/admin.png)
-```
+* Product Categories
+* Product Search
+* Wishlist
+* Product Reviews
+* Stripe Payment Integration
+* Docker Production Configuration
+* CI/CD Pipeline
+* Redis Caching
+* JWT API
+* Unit & Integration Test Coverage
 
 ---
 
 <div align="center">
 
-### ⭐ If you like this project, consider giving it a star!
+### ⭐ If you found this project useful, please consider giving it a star.
 
-Made with ❤️ using ASP.NET Core MVC
+Built with ❤️ using ASP.NET Core MVC and PostgreSQL.
 
 </div>
