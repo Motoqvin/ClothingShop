@@ -16,15 +16,13 @@ A production-ready clothing store built with **ASP.NET Core MVC (.NET 9)** featu
 
 <img src="https://img.shields.io/badge/Entity_Framework_Core-68217A?style=for-the-badge"/>
 
-<img src="https://img.shields.io/badge/Dapper-00599C?style=for-the-badge"/>
-
 <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white"/>
 
 <img src="https://img.shields.io/badge/Bootstrap-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white"/>
 
 </p>
 
-**ASP.NET Core • PostgreSQL • Entity Framework Core • Dapper • Identity • Docker**
+**ASP.NET Core • PostgreSQL • Entity Framework Core • Identity • Docker**
 
 </div>
 
