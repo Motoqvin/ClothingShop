@@ -18,8 +18,16 @@ public class LoggingMiddleware
         var creationDateTime = DateTime.UtcNow;
 
         context.Request.EnableBuffering();
-        var requestBody = await new StreamReader(context.Request.Body).ReadToEndAsync();
-        context.Request.Body.Position = 0;
+
+        var isTextBody = context.Request.ContentType == null || context.Request.ContentType.StartsWith("multipart/") == false;
+
+        string requestBody = string.Empty;
+        if (isTextBody)
+        {
+            requestBody = await new StreamReader(context.Request.Body).ReadToEndAsync();
+            context.Request.Body.Position = 0;
+        }
+        else requestBody = $"[binary/multipart body omitted, {context.Request.ContentLength ?? 0} bytes]";
 
         var requestHeaders = string.Join(", ", context.Request.Headers.Select(h => $"{h.Key}: {h.Value}"));
         var responseHeaders = string.Join(", ", context.Response.Headers.Select(h => $"{h.Key}: {h.Value}"));

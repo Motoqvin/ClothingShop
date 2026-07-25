@@ -67,7 +67,7 @@ public class AdminController : Controller
     [ValidateAntiForgeryToken]
     public IActionResult CreateProduct(Product product, IFormFile? ImageFile)
     {
-        if (!ModelState.IsValid) throw new BadRequestException("Product must be valid", nameof(product));
+        if (!ModelState.IsValid) return View(product);
 
         if (ImageFile != null && ImageFile.Length > 0)
         {
